@@ -2,6 +2,20 @@
 
 Скрипт автоматической установки операционных систем на выделенные и виртуальные серверы VDSok из rescue-системы.
 
+## Установка
+
+Одной командой в rescue-системе:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Kefisto/vdsok-install/master/install-vdsok.sh | bash
+```
+
+Или через git:
+
+```bash
+git clone https://github.com/Kefisto/vdsok-install.git /opt/vdsok-install && /opt/vdsok-install/vdsok-install
+```
+
 ## Возможности
 
 - Установка из интерактивного меню или полностью автоматический (batch) режим
