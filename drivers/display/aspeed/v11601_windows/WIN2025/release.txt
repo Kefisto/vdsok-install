@@ -1,0 +1,240 @@
+; ASPEED Graphics Windows WDDM Driver Release Notes
+;===============================================================================
+v.1.16.01: tommy_huang@021026
+01.[New] Remove I/O resource request and access.
+02.[New] Add duplicate display support (Clone View).
+03.[New] Optimize hot plug behavior.
+04.[New] Add virtual KVM suuport.
+05.[New] Add virtual "AspeedVirtMo" monitor for virtual KVM.
+06.[New] Optimize D-Sub EDID accessing i2c waveform.
+07.[Bug] Fix the DRAM initial path for AST2510.
+08.[Bug] Fix 1280 x 1024 / 1280 x 960 / 1440 x 900 / 1600 x 1200 / 1680x 1050 EDID support.
+09.[New] Remove Windows 10 22H2 support.
+-------------------------------------------------------------------------------
+v.1.16.00: tommy_huang@051325
+01.[New] Update 1152 x 684 judgement rule from EDID.
+02.[New] Add DP MCU fetch EDID behavior.
+03.[New] Add Windows 11 25H2 support.
+04.[New] Remove Windows 11 23H2 support.
+-------------------------------------------------------------------------------
+v.1.15.03: tommy_huang@082624
+01.[New] Update the Windows driver inf file with PnpLockdown=1.
+02.[New] Add 1280 x 720 and 1280 x 960 support.
+03.[New] Add pdev check when power state change.
+04.[New] Update support modes by EDID capability.
+05.[New][AST2600] Add DP hot plug support.
+06.[New] Add Windows 11 24H2 support.
+07.[New] Add Windows Server 2025 support.
+-------------------------------------------------------------------------------
+v.1.15.02: tommy_huang@012524
+01.[Bug] Fix D-Sub display flick when the mode changed occur.
+02.[Bug] Fix abnormal display disable under multi-display adaptor condition.
+03.[New] Add Windows 11 23H2 support.
+04.[New] Remove Windows 11 22H2 support.
+-------------------------------------------------------------------------------
+v.1.15.01: tommy_huang@052423
+01.[Bug] Fix astdp checked flow order inverse.
+-------------------------------------------------------------------------------
+v.1.15.00: tommy_huang@041423
+01.[Bug] Fix abnormal initial chip capability condition.
+-------------------------------------------------------------------------------
+v.1.14.00: tommy_huang@121222
+01.[Bug] Fix interrupt access before driver ready.
+02.[New] Add Windows 11 22H2 support.
+03.[New] Remove Windows Server 2012 R2 support.
+04.[New] Disable chnaged driver installed folder behavior.
+-------------------------------------------------------------------------------
+v.1.13.00: tommy_huang@082222
+01.[Bug] Fix the edid size different between DP and CRT. 
+02.[New] Shorter the CRT EDID waiting time.
+03.[New] Check driver ready then clear V-sync interrupt.
+-------------------------------------------------------------------------------
+v.1.12.00: kuohsiang_chou@092221
+01.[New][WinS22] support WinS22 Beta build 20348 by .inf and .msi installation.
+v.1.12.00: tommy_huang@022221
+01.[New][AST2600] Update display FIFO setting.
+02.[New][AST2600] Skip whole P2A access
+03.[New][AST2600] Add DRAM ready checking when P2A access is denied.
+-------------------------------------------------------------------------------
+v.1.11.00: kuohsiang_chou@072020
+01.[New][AST2600] Support VGA only with P2A disabled
+02.[New][AST2600] Support AST DP with correct BMC FW
+-------------------------------------------------------------------------------
+v.1.10.02: ycchen@060419
+v.1.10.01: ycchen@051519
+01.[Bug][AST2300] Fixed CVE issue on AST2300
+v.1.10.00: ycchen@042919
+01.[Bug][DP501] Fixed CVE for DP501
+-------------------------------------------------------------------------------
+v.1.06.00: ycchen@112217
+01.[Bug] [AST2500] disable fast reset after DRAM initial by H/W request
+02.[Bug] [Win10] Fixed system may failed to resume from S3 on Windows 10 RS3
+-------------------------------------------------------------------------------
+v.1.05.00: ycchen@092617
+01.[Bug] [AST2500] Fixed system resume cause BMC fw reset issue
+-------------------------------------------------------------------------------
+v.1.04.03: ycchen@091117
+01.[Bug] [AST2500] Fix stress test failed if alert #EXTRST to low
+v.1.04.00: ycchen@052317
+01.[New] [AST2500+DP501] Support AST2500 + DP501
+02.[New] [AST2500] Modify DRAM Settings by H/W request (2017_03_30)
+-------------------------------------------------------------------------------
+v.1.03.04: ycchen@121616
+01.[Bug] [Win7] use standard delay routine to avoid platform depedent issue
+v.1.03.02: ycchen@091216
+01.[Bug] [Win2016] Fixed HLK - HyperVisor Code Integrity Readiness Test Issue
+v.1.03.00: ycchen@070616
+01.[Bug] [AST2500] Fixed USB unknown device issue
+02.[Bug] [AST2500] Fixed failed to initial DRAM if enable GPIOZ7
+03.[New] [AST2400/2500] Support AST2400/2500 + ANX9807
+04.[New] [DP501] Add S/W Reset for the platform lack of H/W Reset
+-------------------------------------------------------------------------------
+v.1.02.07: ycchen@032116
+01.[Bug] [Win8] Fixed Failed to Initial DRAM if as secondary
+v.1.02.06: ycchen@010816
+01.[Bug] [Win2016] Fixed HLK - Device Driver INF Verification Test Failed Issue
+v.1.02.05: ycchen@121515
+01.[New] [AST2500] Modify by H/W request (2015_12_12)
+v.1.02.04: ycchen@112315
+01.[New] [AST2300/2400] New DRAM Setting by H/W request
+v.1.02.02: ycchen@082415
+01.[New] [AST2400/2300] Support DRAM Auto Sizing in VGA only mode
+02.[New] Support 1152x864 75Hz
+03.[Bug] [Win8] Fixed System Hanged Issues if Running BurnInTest + iPerf Stress Test
+v.1.02.01: ycchen@072715
+01.[New] Add options for inhibit P2A Access
+02.[New] [AST2400/2500] Support 25MHz V-PLL reference Clock
+-------------------------------------------------------------------------------
+v.1.01.05: ycchen@052715
+01.[Bug] [Win7] Fixed screen display abnormal when system resume on some specific platform with v.1.01.02 driver
+02.[Bug] [AST2500] Fixed 1680x1050 display abnormal issue on DELL 2410 monitor
+03.[New] [AST2500] Support AST2500 VGA only mode(without BMC)
+v.1.01.04: ycchen@041315
+01.[Bug] [AST2500] Fixed 1600x900 CVT without RB did not display properly
+02.[Bug] [AST2500] Fixed Threshold Issue for reduced blank mode
+v.1.01.03: ycchen@040215
+01.[Bug] [Win7] Fixed screen display abnormal when system resume on some specific platform with v.1.01.02 driver
+02.[Bug] [AST2500] Recover E2M for AST2500A0
+03.[New] [AST2500] Remove AST2500A0 VCLK patch for AST2500A1 and after
+04.[Bug] [DP501] Fixed cannot display issue with 2-lanes design
+05.[Bug] [DP501] Fixed sw reset cause screen blank issue
+06.[Bug] [ITE66121] Fixed screen blank issue sometimes
+v.1.01.02: ycchen@022615
+01.[New] Support 1600x900 CVT mode
+v.1.01.01: ycchen@020915
+01.[Bug] [Win8] Fixed move icon cause noise issue in "Modern UI Style"
+02.[Bug] [Win7] Fixed booting to 1920x1200 desktop screen garbage issue in Win2008R2
+03.[Bug] [AST2500] Disable E2M for AST2500A0
+04.[Bug] Modify for CVT reduced blank parsing criteria
+05.[Bug] [DP501] Migrate boot.bin to v.1.01.01 for BMC fw IRQ8 increase issue
+-------------------------------------------------------------------------------
+v.1.00.07: ycchen@091714
+01.[Bug] [ITE66121] Fixed cannot display properly through ITE66121
+02.[Bug] [AST1400] Fixed AST1400 cannot support wide screen mode
+03.[New] [AST2400] Enable PCI AER for Windows 2012 WHQL Certificaation
+v.1.00.05: ycchen@072414
+01.[New] Show "AST1400/2400" instead of "AST2400" for AST1400/2400 product
+02.[Bug] Remove 1600x1200 for ASUSP238 monitor
+-------------------------------------------------------------------------------
+v.0.99.10: ycchen@032114
+01.[Bug] [DP501] Fixed screen blank if resume from Hibernate
+v.0.99.09: ycchen@030414
+01.[Bug] [Win8] Fixed screen flashing issue while dragging icons
+v.0.99.08: ycchen@022014
+01.[Bug] [DP501] Fixed Screen Blank Sometimes and need to re-plug to resume
+02.[Bug] Fixed monitor "out of range" issue when hibernate
+v.0.99.07: ycchen@012414
+01.[Bug] [DP501] Fixed Screen Blank Sometimes and need to re-plug to resume
+v.0.99.06: ycchen@010714
+01.[Bug] [DP501] Fixed Screen Blank Sometimes even re-plug DP connector
+v.0.99.05: ycchen@010204
+01.[New] [Win8] Support Multi Refresh Rate
+02.[Bug] [DP501] Fixed Screen Blank Sometimes Issue
+03.[Bug] [SIL164] Fixed Screen Blank Resume from Suspend
+04.[New] [DP501] Modify for Lenovo Ramjet and Renegade SDV
+v.0.99.04: ycchen@120613
+01.[Bug] [DP501] Fixed EDID cannot be read properly when system reset
+v.0.99.03: ycchen@120313
+01.[Bug] [AST2400 + DP501] Fixed screen noise issue when system reset
+02.[Bug] Fixed 1600x1200 will be disabled if the prefer timing of the monitor is 1920x1080
+v.0.99.01: ycchen@112113
+01.[Bug] [AST2400 + DP501] Fixed DP Dongle Compatible Issue
+v.0.99.00: ycchen@111513
+01.[New] [AST2400] Support AST2400 + DP501
+-------------------------------------------------------------------------------
+v.0.98.01: ycchen@090513
+01.[New] [Win8] Support Win2012R2, Win8.1 x86/x64
+02.[Bug] [Win8] Fixed HCK2.1 - FPO Optomization Check Failed Issue
+03.[Bug] [Win8] Fixed HCK2.1 - Device Driver INF Verification Failed Issue
+04.[New] [Vista/Win7] Use MMIO instead of IO port access
+v.0.98.00: ycchen@080306
+01.[New] [Win8] Support Multi-Adapters
+02.[Bug] [Win8] Force to VGA Mode for embedded CRT enabled platform
+03.[New] [Win8] Use MMIO Mode instead of Legacy Relocate IO Access
+04.[Bug] [ite66121] Fixed I2C interrupt be trigerred issue
+05.[Bug] [ite66121] Fixed Read EDID un-stable issue
+06.[Bug] [Win8] Fixed Reboot Stressed Hanged Issue, ycchen@080313
+-------------------------------------------------------------------------------
+v.0.97.06: ycchen@022013
+01.[Bug] [Win8] H/W cursor did not be disabled properly if unload driver
+02.[Bug] [Win8] Fixed TDR timeout issue
+03.[Bug] [AST2000] Fixed display abnormal issue
+04.[New] Modify for Read EDID Stability
+v.0.97.05: ycchen@122512
+01.[New] Remove Wide Screen Mode if the prefer timing of the monitor is not wide screen mode
+v.0.97.04: ycchen@121112
+01.[New] Support ITE66121 on AST2300/2400
+-------------------------------------------------------------------------------
+v.0.96.06: ycchen@120512
+01.[Bug] [Win8] Fixed S3 resume failed issue
+02.[New] [Win8] remove double buffer limitation
+03.[New] [Win8] [AST2300] Disable ASPM
+v.0.96.05: ycchen@111412
+01.[Bug] [Win8] Fixed HCK - GammaRamp Test Failed Issues
+02.[Bug] Modify DRAM Setting by H/W request
+v.0.96.04: ycchen@102312
+01.[Bug] [Win8] Fixed iKVM not work peroperly issue
+02.[Bug] [Win8] Fixed HCK - WDDM CCD Test connectivity status failed issue
+v.0.96.03: ycchen@101512
+01.[Bug] [Win8] Add I2C Interface and SetPalette DDI for WHCK Certification
+02.[Bug] [Win8] Modify INF filefor WHCK certification
+v.0.96.02: ycchen@100312
+01.[Bug] [Win8] Fixed cause bug check 0x50 if runing HCK\WDDM PnPStopModeSwitch Test
+v.0.96.01: ycchen@092812
+01.[Bug] [Win8] Fixed ASPEED gaphics driver cannot install properly with GOP driver on Windows Server 2012
+v.0.96.00: ycchen@090512
+01.[Bug] Fixed 1920x1080 Screen not Full on SAMSUNG SyncMaster BX2231
+02.[New] Support 1600x900 60Hz (CVT Reduced Blank)
+03.[Bug] Fixed resolution cannot above than 1400x900 if attached non-PnP monitor, ycchen@082912
+04.[Bug] [AST1300] Fixed AST1300 cannot support wide screen mode
+05.[New] Set CVT non-reduced blank as default timing for 1280x800, 1400x900, 1650x1080, ycchen@090512
+06.[Bug] [AST2400] Fixed adapter info. in display page is in-correct
+-------------------------------------------------------------------------------
+v.0.95.01: ycchen@052112
+01.[Bug] Fixed iKVM cannot display properly with older VBIOS (before v.0.92.00)
+02.[New] [AST2300] Modify DRAM settings by H/W request (2012_05_09)
+03.[Bug] [AST2300] Avoid I2C1 lock issue if customer I2C1 layout is not correct
+04.[New] Support 1360x768 60Hz
+v.0.95.00: ycchen@041212
+01.[New] [AST2400] Support AST2400
+02.[New] Support on Windows 8 Customer Preview
+-------------------------------------------------------------------------------
+v.0.93.09: ycchen@061711
+01.[2008R2] Fixed 1600x1200 60Hz didn't show in the mode list if use ASUS VK247H Monitor
+v.0.93.08: ycchen@053111
+01.[New] [AST2300] Modify MCLK to 396MHz by H/W request
+v.0.93.07 by ycchen@050511
+01.[Bug] Fixed system hanged if attach Synco 19" LCD Monitor, ycchen@050111
+02.[Bug] Fixed 640x480 256c display abnormal issue, ycchen@050411
+03.[Bug] Fixed 60/70/72Hz disappear issue on Benq HD2200, ycchen@050511
+04.[Bug] Fixed it takes too long time to get EDID from EDID failed monitor
+05.[Bug] Fixed cursor display abnormal while playing kmplayer
+v.0.93.06: ycchen@042911
+01.[Bug] Fixed screen abnormal if resume from monitor off, ycchen@042111
+02.[Bug] Fixed 256c mode color and cursor abnormal issue, ycchen@042511
+03.[Bug] Fixed Driver can't load properly issue under Vista/Server2008, ycchen@042611
+04.[Bug] Fixed Read EDID unstable issue, ycchen@042711
+05.[Bug] Fixed Mode List Include Monitor Unsupport Modes
+v.0.93.05: ycchen@042111
+01.First release
+
