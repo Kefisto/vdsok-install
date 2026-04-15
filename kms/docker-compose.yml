@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  vlmcsd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vdsok-kms
+    ports:
+      - "1688:1688"
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "1688"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

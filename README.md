@@ -216,6 +216,53 @@ bash download-drivers.sh --virtio   # VirtIO для KVM
 
 Драйверы автоматически копируются в `C:\Drivers` и подхватываются при первом запуске.
 
+## KMS-сервер (активация Windows)
+
+VDSok использует собственный KMS-сервер (`kms.vdsok.com`) на базе [vlmcsd](https://github.com/Wind4/vlmcsd) для автоматической активации Windows.
+
+### Быстрое развёртывание KMS
+
+На отдельном VPS (Ubuntu/Debian/CentOS):
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Kefisto/vdsok-install/master/kms/deploy.sh | bash
+```
+
+Или вручную:
+
+```bash
+git clone https://github.com/Kefisto/vdsok-install.git
+cd vdsok-install/kms
+sudo bash deploy.sh
+```
+
+Скрипт автоматически:
+- Установит Docker (если отсутствует)
+- Соберёт и запустит vlmcsd в контейнере
+- Откроет порт 1688/tcp в firewall
+- Проверит работоспособность
+
+### DNS
+
+Создайте A-запись `kms.vdsok.com` → IP вашего KMS-сервера.
+
+### Проверка с Windows
+
+```powershell
+slmgr /skms kms.vdsok.com
+slmgr /ato
+```
+
+### Управление
+
+```bash
+cd /opt/vdsok-kms
+docker compose logs -f        # логи
+docker compose restart         # перезапуск
+docker compose down            # остановка
+docker compose up -d --build   # пересборка
+```
+
 ## Структура проекта
 
 ```
@@ -251,6 +298,10 @@ bash download-drivers.sh --virtio   # VirtIO для KVM
 ├── configs/                   # Готовые конфигурации (Linux + Windows)
 ├── download-drivers.sh        # Загрузчик драйверов для rescue-среды
 ├── drivers/                   # Драйверы Windows (сеть, хранилище, видео)
+├── kms/                       # KMS-сервер (vlmcsd в Docker)
+│   ├── docker-compose.yml     #   Docker Compose конфигурация
+│   ├── Dockerfile             #   Сборка vlmcsd из исходников
+│   └── deploy.sh              #   Скрипт быстрого развёртывания
 ├── gpg/                       # GPG-ключи для верификации образов
 ├── post-install/              # Post-install скрипты (Proxmox, Nextcloud, Windows)
 └── util/                      # Утилиты (хэширование паролей и др.)
