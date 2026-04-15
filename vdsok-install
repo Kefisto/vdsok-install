@@ -34,7 +34,8 @@ echo 3 >/proc/sys/vm/drop_caches
 
 
 # realconfig
-SCRIPTPATH="$(dirname "$0")"
+SCRIPTPATH="$(cd "$(dirname "$0")" && pwd)"
+export SCRIPTPATH
 REALCONFIG="$SCRIPTPATH/config.sh"
 
 FOLD="$(mktemp -d /vdsok-install.XXXXX)"
