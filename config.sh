@@ -11,7 +11,7 @@ DEBUGFILE=/root/debug.txt
 
 
 # set up standard env
-export SCRIPTPATH; SCRIPTPATH=$(dirname "$0")
+export SCRIPTPATH; SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
 export DISABLEDFILE="$SCRIPTPATH/disabled"
 export SETUPFILE="$SCRIPTPATH/setup.sh"
 export AUTOSETUPFILE="$SCRIPTPATH/autosetup.sh"
