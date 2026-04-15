@@ -1029,7 +1029,7 @@ validate_vars() {
   fi
 
   # test if FILETYPE is a supported type
-  CHECK="$(echo $IMAGE_FILE_TYPE |grep -i -e "^tar$\|^tgz$\|^tbz$\|^txz$\|^zst$")"
+  CHECK="$(echo $IMAGE_FILE_TYPE |grep -i -e "^tar$\|^tgz$\|^tbz$\|^txz$\|^zst$\|^wim$")"
   if [ -z "$CHECK" ]; then
     graph_error "ERROR: $IMAGE_FILE_TYPE is no valid FILETYPE for images"
     return 1
@@ -1800,7 +1800,7 @@ whoami() {
    IMG_VERSION="$(echo "$1" | cut -d "-" -f 2)"
    [ -z "$IMG_VERSION" -o "$IMG_VERSION" = "" -o "$IMG_VERSION" = "h.net.tar.gz" -o "$IMG_VERSION" = 'latest' ] && IMG_VERSION="0"
  fi
- IMG_ARCH="$(echo "$1" | sed 's/.*-\(32\|64\|i386\|amd64\|arm64\)-.*/\1/')"
+ IMG_ARCH="$(echo "${1%%.*}" | sed 's/.*-\(32\|64\|i386\|amd64\|arm64\).*/\1/')"
  if grep -q '-' <<< "$IMG_ARCH"; then IMG_ARCH='unknown'; fi
 
  IMG_FULLNAME="$(find "$IMAGESPATH" -maxdepth 1 -type f -name "$1*" -a -not -regex '.*\.sig$' -printf '%f\n')"
