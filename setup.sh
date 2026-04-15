@@ -3,7 +3,7 @@
 #
 # mainmenu - choose which image should be installed
 #
-# (c) 2007-2022, Hetzner Online GmbH
+# (c) 2007-2022, VDSok
 #
 
 
@@ -14,7 +14,7 @@
 debug "# checking if the script is disabled"
 if [ -f "$DISABLEDFILE" ]; then
  debug "=> script is DISABLED"
- echo_red "Due to maintenance the installimage-script is temporarily unavailable.\nWe are sorry for the inconvenience."
+ echo_red "Due to maintenance the vdsok-install script is temporarily unavailable.\nWe are sorry for the inconvenience."
  exit 1
 fi
 
@@ -57,7 +57,7 @@ if [ "$OPT_AUTOMODE" ] ; then
 
   # display information about automatic mode
   echo -e "\n\033[01;32mStarting AUTOMATIC MODE\033[00m"
-  echo -e "\033[01;33mRunning unattended installimage installation ...\033[00m"
+  echo -e "\033[01;33mRunning unattended vdsok-install installation ...\033[00m"
   echo ""
   grep -v "^#" "$FOLD/install.conf" | grep -v "^$"
   echo ""
@@ -127,6 +127,21 @@ else
           ;;
           "Custom image")
             IMAGENAME="custom"
+          ;;
+          "Windows")
+            WIN_MENU=()
+            while IFS= read -r -d '' wim_file; do
+              local wim_name
+              wim_name="$(basename "$wim_file")"
+              WIN_MENU+=("$wim_name" "")
+            done < <(find "$IMAGESPATH" -maxdepth 1 -type f \( -iname '*windows*' -o -iname '*win-server*' -o -iname '*.wim' \) -not -name '*.sig' -print0 2>/dev/null)
+            if ((${#WIN_MENU[@]} == 0)); then
+              dialog --backtitle "$DIATITLE" --title "Windows" --msgbox "\nNo Windows images found in $IMAGESPATH\n\nPlace WIM files like:\n  Windows-Server2022-Datacenter-amd64.wim\n" 12 60
+            else
+              dialog --backtitle "$DIATITLE" --title "Windows Images" --no-cancel --menu "Choose Windows version" 0 0 0 "${WIN_MENU[@]}" 2>"$FOLD/mainmenu.chosen"
+              IMAGENAME="$(cat "$FOLD/mainmenu.chosen")"
+              IMAGENAME="${IMAGENAME%.wim}"
+            fi
           ;;
           *)
             generate_menu "$MAINMENUCHOSEN"

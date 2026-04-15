@@ -3,7 +3,7 @@
 #
 # functions
 #
-# (c) 2007-2024, Hetzner Online GmbH
+# (c) 2007-2024, VDSok
 #
 
 
@@ -237,7 +237,7 @@ create_config() {
 
     {
       echo "## ======================================================"
-      echo "##  $COMPANY - installimage - standard config"
+      echo "##  $COMPANY - vdsok-install - standard config"
       echo "## ======================================================"
       echo ""
     } > "$CNF"
@@ -713,7 +713,7 @@ read_vars(){
 if [ -n "$1" ]; then
   # reset to 0 in case we are called again after user has been dropped into an editor
   HASROOT=0
-  # count disks again, for setting COUNT_DRIVES correct after restarting installimage
+  # count disks again, for setting COUNT_DRIVES correct after restarting vdsok-install
   getdrives
 
   # special hidden configure option: create RAID1 and 10 with assume clean to
@@ -1771,11 +1771,35 @@ whoami() {
     *rocky*)IAM="rockylinux";;
     *alma*)IAM="almalinux";;
     *rhel*)IAM="rhel";;
+    *windows*|*winserver*|*win-server*|*win10*|*win11*)IAM="windows";;
   esac
  fi
 
- IMG_VERSION="$(echo "$1" | cut -d "-" -f 2)"
- [ -z "$IMG_VERSION" -o "$IMG_VERSION" = "" -o "$IMG_VERSION" = "h.net.tar.gz" -o "$IMG_VERSION" = 'latest' ] && IMG_VERSION="0"
+ if [[ "$IAM" == "windows" ]]; then
+   WIN_VERSION=""
+   WIN_EDITION="datacenter"
+   case "${1,,}" in
+     *2025*) WIN_VERSION="2025" ;;
+     *2022*) WIN_VERSION="2022" ;;
+     *2019*) WIN_VERSION="2019" ;;
+     *win11*|*windows-11*) WIN_VERSION="11" ;;
+     *win10*|*windows-10*) WIN_VERSION="10" ;;
+   esac
+   case "${1,,}" in
+     *standard*) WIN_EDITION="standard" ;;
+     *datacenter*) WIN_EDITION="datacenter" ;;
+     *pro*) WIN_EDITION="pro" ;;
+     *enterprise*) WIN_EDITION="enterprise" ;;
+   esac
+   export WIN_VERSION
+   export WIN_EDITION
+   IMG_VERSION="${WIN_VERSION:-0}"
+ fi
+
+ if [[ "$IAM" != "windows" ]]; then
+   IMG_VERSION="$(echo "$1" | cut -d "-" -f 2)"
+   [ -z "$IMG_VERSION" -o "$IMG_VERSION" = "" -o "$IMG_VERSION" = "h.net.tar.gz" -o "$IMG_VERSION" = 'latest' ] && IMG_VERSION="0"
+ fi
  IMG_ARCH="$(echo "$1" | sed 's/.*-\(32\|64\|i386\|amd64\|arm64\)-.*/\1/')"
  if grep -q '-' <<< "$IMG_ARCH"; then IMG_ARCH='unknown'; fi
 
@@ -1793,6 +1817,10 @@ whoami() {
  {
    echo "  DISTRIB ID:               $IAM"
    echo "  DISTRIB RELEASE/CODENAME: $IMG_VERSION"
+   if [[ "$IAM" == "windows" ]]; then
+     echo "  WINDOWS VERSION:          $WIN_VERSION"
+     echo "  WINDOWS EDITION:          $WIN_EDITION"
+   fi
  } | debugoutput
 
  return 0
@@ -2795,7 +2823,7 @@ get_image_info() {
       http)
         mkdir "$FOLD/keys/" 2>&1
         cd "$FOLD/keys/"
-        # no exitcode, because if not found hetzner-pubkey will be used
+        # no exitcode, because if not found vdsok-pubkey will be used
         wget -q --no-check-certificate --content-disposition "${1}public-key.asc" 2>&1 | debugoutput ; >/dev/null
         if [ "$EXITCODE" -eq "0" ]; then
           IMAGE_PUBKEY="$FOLD/keys/public-key.asc"
@@ -2997,7 +3025,7 @@ generate_resolvconf() {
       DNSRESOLVERFILE="${FOLD}/hdd/etc/resolv.conf"
     fi
 
-    echo -e "### ${COMPANY} installimage" > "$DNSRESOLVERFILE"
+    echo -e "### ${COMPANY} vdsok-install" > "$DNSRESOLVERFILE"
     echo -e '# nameserver config' >> "$DNSRESOLVERFILE"
     while read nsaddr; do
       echo "nameserver ${nsaddr}" >> "$DNSRESOLVERFILE"
@@ -3098,7 +3126,7 @@ set_hostname() {
       echo "HOSTNAME=${fqdn_name:-$shortname}" >> "$networkfile"
     fi
 
-    echo "### $COMPANY installimage" > $hostsfile
+    echo "### $COMPANY vdsok-install" > $hostsfile
     echo "127.0.0.1 localhost.localdomain localhost" >> $hostsfile
     if [[ -n "$ip4" ]]; then
       echo "$ip4 $fqdn_name $shortname" | xargs >> $hostsfile
@@ -3136,7 +3164,7 @@ generate_hosts() {
       HOSTNAME="$(cat $HOSTNAMEFILE | cut -d. -f1)";
       [ "$FULLHOSTNAME" = "$HOSTNAME" ] && FULLHOSTNAME=""
     fi
-    echo "### $COMPANY installimage" > $HOSTSFILE
+    echo "### $COMPANY vdsok-install" > $HOSTSFILE
     echo "# nameserver config" >> $HOSTSFILE
     echo "# IPv4" >> $HOSTSFILE
     echo "127.0.0.1 localhost.localdomain localhost" >> $HOSTSFILE
@@ -3423,7 +3451,7 @@ generate_sysctlconf() {
    sysctl_conf="$FOLD/hdd/etc/sysctl.d/99-$C_SHORT.conf"
   fi
     cat << EOF > $sysctl_conf
-### $COMPANY installimage
+### $COMPANY vdsok-install
 # sysctl config
 #net.ipv4.ip_forward=1
 net.ipv4.conf.all.rp_filter=1
@@ -3749,7 +3777,7 @@ install_robot_report_script() {
   debug '# install robot report script'
   {
     echo '#!/usr/bin/env bash'
-    echo "### ${COMPANY} installimage"
+    echo "### ${COMPANY} vdsok-install"
     echo '# report installation to robot'
     echo "rm '$robot_report_script'"
     installed_os_uses_systemd || echo '('
@@ -3792,7 +3820,7 @@ install_robot_report_script() {
     fi
     debug '# install robot report service'
     {
-      echo "### ${COMPANY} installimage"
+      echo "### ${COMPANY} vdsok-install"
       echo '# report installation to robot'
       echo '[Unit]'
       echo 'After=network.target'
@@ -3821,7 +3849,7 @@ install_robot_report_script() {
     # backup and patch script
     sed -i.bak '/^exit 0\s*$/d' "$FOLD/hdd/$script"
     {
-      echo "### ${COMPANY} installimage"
+      echo "### ${COMPANY} vdsok-install"
       echo '# report installation to robot'
       echo "[[ -x $robot_report_script ]] && $robot_report_script"
       echo 'exit 0'
@@ -3880,14 +3908,14 @@ exit_function() {
   echo
   echo "Please check our wiki for a description of the error:"
   echo
-  echo "https://docs.hetzner.com/robot/dedicated-server/operating-systems/installimage/"
+  echo "https://docs.vdsok.com/dedicated-server/operating-systems/vdsok-install/"
   echo
   echo "If your problem is not described there, try booting into a fresh"
   echo "rescue system and restart the installation. If the installation"
-  echo "fails again, please contact our support via Hetzner Robot, providing"
+  echo "fails again, please contact our support via VDSok panel, providing"
   echo "the IP address of the server and a copy of the debug file."
   echo
-  echo "  https://robot.hetzner.com/"
+  echo "  https://panel.vdsok.com/"
   echo
 
   report_install

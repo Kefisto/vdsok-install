@@ -3,7 +3,7 @@
 #
 # systemd functions
 #
-# (c) 2017-2018, Hetzner Online GmbH
+# (c) 2017-2018, VDSok
 #
 
 # get installed os systemd version

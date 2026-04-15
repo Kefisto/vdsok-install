@@ -2,7 +2,7 @@
 #
 # RedHat specific functions
 #
-# (c) 2021, Hetzner Online GmbH
+# (c) 2021, VDSok
 #
 
 # generate_config_mdadm "NIL"
@@ -28,7 +28,7 @@ generate_new_ramdisk() {
 
   local dracutfile="${FOLD}/hdd/etc/dracut.conf.d/99-${C_SHORT}.conf"
   cat << EOF > "$dracutfile"
-### ${COMPANY} - installimage
+### ${COMPANY} - vdsok-install
 add_dracutmodules+=" lvm mdraid "
 add_drivers+=" raid0 raid1 raid10 raid456 "
 hostonly="no"

@@ -3,7 +3,7 @@
 #
 # cpanel functions
 #
-# (c) 2008-2024, Hetzner Online GmbH
+# (c) 2008-2024, VDSok
 #
 
 # is_cpanel_install()
@@ -47,7 +47,7 @@ cpanel_setup_wwwacct_conf() {
     --in-place "${FOLD}/hdd/${wwwacct_conf}"
   {
     echo
-    echo "### ${COMPANY} installimage"
+    echo "### ${COMPANY} vdsok-install"
     echo "ADDR $(ip_addr_without_suffix "$v4_main_ip")"
     echo "HOST ${NEWHOSTNAME}"
     echo "NS ${AUTH_DNS1}"

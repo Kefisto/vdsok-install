@@ -3,7 +3,7 @@
 #
 # textprocessing functions
 #
-# (c) 2016-2018, Hetzner Online GmbH
+# (c) 2016-2018, VDSok
 #
 
 # safe_replace() <pattern> <replacement> <file>

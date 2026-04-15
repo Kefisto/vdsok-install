@@ -1,6 +1,6 @@
 #!/bin/sh
 
-### Hetzner Online GmbH - installimage
+### VDSok - vdsok-install
 
 PREREQ="mdadm mdrun multipath"
 

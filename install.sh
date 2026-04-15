@@ -3,7 +3,7 @@
 #
 # install - installation commands
 #
-# (c) 2007-2021, Hetzner Online GmbH
+# (c) 2007-2021, VDSok
 #
 
 
@@ -68,7 +68,7 @@ status_donefailed() {
 }
 
 echo
-echo_bold "                $COMPANY - installimage\n"
+echo_bold "                $COMPANY - vdsok-install\n"
 echo_bold "  Your server will be installed now, this will take some minutes"
 echo_bold "             You can abort at any time with CTRL+C ...\n"
 
@@ -99,6 +99,151 @@ if [ -e "$SCRIPTPATH/$IAM.sh" ]; then
 else
   status_failed
 fi
+
+# --- Windows installation flow ---
+if [[ "$IAM" == "windows" ]]; then
+
+  TOTALSTEPS=$WIN_INSTALL_STEPS
+  test "$IMAGE_PATH_TYPE" = "http" && TOTALSTEPS=$(($TOTALSTEPS + 1))
+
+  # Check Windows installation requirements
+  inc_step
+  status_busy "Checking Windows installation requirements"
+  if ! win_check_requirements; then
+    status_busy_nostep "  Installing missing tools"
+    win_install_requirements || status_failed
+    win_check_requirements || status_failed
+  fi
+  status_done
+
+  # Clean up existing partitions
+  inc_step
+  status_busy "Deleting partitions"
+  output=$(unmount_all) ; EXITCODE=$?
+  if [ $EXITCODE -ne 0 ] ; then
+    echo ""
+    echo -e "${RED}ERROR unmounting device(s):$NOCOL"
+    echo "$output"
+    exit 1
+  fi
+  stop_lvm_raid 2>&1 | debugoutput
+  for part_inc in $(seq 1 $COUNT_DRIVES) ; do
+    TARGETDISK="$(eval echo \$DRIVE${part_inc})"
+    debug "# Deleting partitions on $TARGETDISK"
+    delete_partitions "$TARGETDISK" 2>&1 | debugoutput
+  done
+  status_done
+  wait_for_udev
+
+  # Create Windows partition layout
+  inc_step
+  status_busy "Creating Windows partitions"
+  generate_config_windows || status_failed
+  status_done
+  wait_for_udev
+
+  # Format partitions
+  inc_step
+  status_busy "Formatting partitions"
+  win_format_partitions "$DRIVE1" || status_failed
+  status_done
+  wait_for_udev
+
+  # Mount Windows partition
+  inc_step
+  status_busy "Mounting partitions"
+  local win_part boot_part
+  win_part="$(win_get_windows_partition "$DRIVE1")"
+  boot_part="$(win_get_boot_partition "$DRIVE1")"
+  win_mount_ntfs "$win_part" "$FOLD/hdd" || status_failed
+  if ((UEFI == 1)); then
+    mkdir -p "$FOLD/hdd/boot/efi" 2>/dev/null
+    mount -t vfat "$boot_part" "$FOLD/hdd/boot/efi" 2>&1 | debugoutput || status_failed
+  else
+    mkdir -p "$FOLD/hdd/boot" 2>/dev/null
+    win_mount_ntfs "$boot_part" "$FOLD/hdd/boot" 2>&1 | debugoutput || status_failed
+  fi
+  status_done
+
+  # NTP sync
+  inc_step
+  status_busy "Sync time via ntp"
+  set_ntp_time
+  status_donefailed $?
+
+  # Download image (if remote)
+  if [ "$IMAGE_PATH_TYPE" = "http" ] ; then
+    inc_step
+    status_busy "Downloading image ($IMAGE_PATH_TYPE)"
+    get_image_url "$IMAGE_PATH" "$IMAGE_FILE"
+    status_donefailed $?
+  fi
+
+  # Apply WIM image
+  inc_step
+  status_busy "Applying Windows image"
+  local wim_path="$EXTRACTFROM"
+  [[ -z "$wim_path" ]] && wim_path="$IMAGESPATH/$IMAGE_FILE"
+  apply_windows_image "$wim_path" "$FOLD/hdd" 1 || status_failed
+  status_done
+
+  # Setup bootloader
+  inc_step
+  status_busy "Installing Windows bootloader"
+  if ((UEFI == 1)); then
+    setup_windows_bootloader "$FOLD/hdd" "$FOLD/hdd/boot/efi" || status_failed
+  else
+    setup_windows_bootloader "$FOLD/hdd" "$FOLD/hdd/boot" || status_failed
+  fi
+  status_done
+
+  # Generate unattend.xml (network, password, RDP, KMS, firewall)
+  inc_step
+  status_busy "Configuring Windows (unattend.xml)"
+  setup_windows_unattend "$FOLD/hdd" || status_failed
+  status_done
+
+  # OS-specific functions (RDP registry, drivers, mirror, firstrun)
+  inc_step
+  status_busy "Running Windows post-configuration"
+  run_os_specific_functions || status_failed
+  status_done
+
+  # Unmount
+  sync
+  if ((UEFI == 1)); then
+    umount "$FOLD/hdd/boot/efi" 2>&1 | debugoutput
+  else
+    win_umount "$FOLD/hdd/boot" 2>/dev/null
+  fi
+  win_umount "$FOLD/hdd"
+
+  # Report
+  report_install
+
+  # Save config
+  mkdir -p "$FOLD/hdd_final" 2>/dev/null
+  win_mount_ntfs "$win_part" "$FOLD/hdd_final" 2>/dev/null
+  if [[ -d "$FOLD/hdd_final/Windows" ]]; then
+    (
+      echo "# $COMPANY - vdsok-install"
+      echo "# Windows installation configuration"
+      echo "#"
+      cat "$FOLD/install.conf" 2>/dev/null | grep -v "^#" | grep -v "^$"
+    ) > "$FOLD/hdd_final/vdsok-install.conf" 2>/dev/null
+    cat /root/debug.txt > "$FOLD/hdd_final/vdsok-install.debug" 2>/dev/null
+  fi
+  win_umount "$FOLD/hdd_final" 2>/dev/null
+
+  echo
+  echo_bold "                  INSTALLATION COMPLETE"
+  echo_bold "   You can now reboot and connect via RDP to your Windows server."
+  echo_bold "   Use the same password that you used for the rescue system.\n"
+
+  exit 0
+fi
+
+# --- Standard Linux installation flow ---
 
 test "$OPT_INSTALL" && TOTALSTEPS=$(($TOTALSTEPS + 1))
 test "$IMAGE_PATH_TYPE" = "http" && TOTALSTEPS=$(($TOTALSTEPS + 1))
@@ -221,7 +366,7 @@ if [ -z "$REUSE_FSTAB" ] ; then
 fi
 
 if [ -n "$REUSE_FSTAB" ] ; then
-  # copy existing fstab to installimage path
+  # copy existing fstab to vdsok-install path
   cp $REUSE_FSTAB $FOLD/fstab
   TOTALSTEPS=$(($TOTALSTEPS - 3))
 
@@ -506,8 +651,6 @@ fi
 
 #
 # os specific functions
-# details in debian.sh / suse.sh / ubuntu.sh
-# for purpose of e.g. debian-sys-maint mysql user password in debian/ubuntu LAMP
 #
 inc_step
 status_busy "Running some $IAM specific functions"
@@ -561,26 +704,26 @@ fi
 report_install
 
 #
-# Save installimage configuration and debug file on the new system
+# Save vdsok-install configuration and debug file on the new system
 #
 (
   echo "#"
-  echo "# $COMPANY - installimage"
+  echo "# $COMPANY - vdsok-install"
   echo "#"
   echo "# This file contains the configuration used to install this"
-  echo "# system via installimage script. Comments have been removed."
+  echo "# system via vdsok-install script. Comments have been removed."
   echo "#"
-  echo "# More information about the installimage script and"
+  echo "# More information about the vdsok-install script and"
   echo "# automatic installations can be found in our wiki:"
   echo "#"
-  echo "# https://docs.hetzner.com/robot/dedicated-server/operating-systems/installimage/"
+  echo "# https://docs.vdsok.com/dedicated-server/operating-systems/vdsok-install/"
   echo "#"
   echo
   cat $FOLD/install.conf | grep -v "^#" | grep -v "^$"
-) > $FOLD/hdd/installimage.conf
-cat /root/debug.txt > $FOLD/hdd/installimage.debug
-chmod 640 $FOLD/hdd/installimage.conf
-chmod 640 $FOLD/hdd/installimage.debug
+) > $FOLD/hdd/vdsok-install.conf
+cat /root/debug.txt > $FOLD/hdd/vdsok-install.debug
+chmod 640 $FOLD/hdd/vdsok-install.conf
+chmod 640 $FOLD/hdd/vdsok-install.debug
 
 echo
 echo_bold "                  INSTALLATION COMPLETE"

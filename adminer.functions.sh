@@ -3,7 +3,7 @@
 #
 # adminer functions
 #
-# (c) 2019, Hetzner Online GmbH
+# (c) 2019, VDSok
 #
 
 setup_adminer() {

@@ -3,7 +3,7 @@
 #
 # plesk functions
 #
-# (c) 2007-2018, Hetzner Online GmbH
+# (c) 2007-2018, VDSok
 #
 
 # is_plesk_install()
@@ -57,7 +57,7 @@ install_plesk() {
     {
       echo 'net.ipv4.ip_nonlocal_bind = 1'
       echo 'net.ipv6.ip_nonlocal_bind = 1'
-    } >> "$FOLD/hdd/etc/sysctl.d/99-hetzner.conf"
+    } >> "$FOLD/hdd/etc/sysctl.d/99-vdsok.conf"
     break
   done < <(physical_network_interfaces)
 

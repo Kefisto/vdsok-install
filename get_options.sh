@@ -3,21 +3,21 @@
 # read config
 #. /tmp/install.vars
 #
-# (c) 2009-2018, Hetzner Online GmbH
+# (c) 2009-2018, VDSok
 #
 
 
 
 # check command line params / options
-while getopts "han:b:r:l:i:p:v:d:f:c:R:s:z:x:gkK:t:u:G:" OPTION ; do
+while getopts "han:b:r:l:i:p:v:d:f:c:R:s:z:x:gkK:t:u:G:W:" OPTION ; do
   case $OPTION in
 
     # help
     h)
       echo
-      echo "usage:  installimage [options]"
+      echo "usage:  vdsok-install [options]"
       echo
-      echo "  without any options, installimage starts in interactive mode."
+      echo "  without any options, vdsok-install starts in interactive mode."
       echo "  possible options are:"
       echo
       echo "  -h                    display this help"
@@ -61,6 +61,7 @@ while getopts "han:b:r:l:i:p:v:d:f:c:R:s:z:x:gkK:t:u:G:" OPTION ; do
       echo '  -t <yes|no>           Take over rescue system SSH public keys'
       echo '  -u <yes|no>           Allow usb drives'
       echo '  -G <yes|no>           Generate new SSH host keys (default: yes)'
+      echo '  -W <product_key>      Windows product key for activation'
       echo
       exit 0
     ;;
@@ -82,7 +83,7 @@ while getopts "han:b:r:l:i:p:v:d:f:c:R:s:z:x:gkK:t:u:G:" OPTION ; do
       cp "$OPT_CONFIGFILE" /autosetup
       if grep -q PASSWD /autosetup ; then
         echo -e "\n\n${RED}Please enter the PASSWORD for $OPT_CONFIGFILE:${NOCOL}"
-        echo -e "${YELLOW}(or edit /autosetup manually and run installimage without params)${NOCOL}\n"
+        echo -e "${YELLOW}(or edit /autosetup manually and run vdsok-install without params)${NOCOL}\n"
         echo -en "PASSWORD:  "
         read -s imagepasswd
         sed -i /autosetup -e "s/PASSWD/$imagepasswd/"
@@ -143,6 +144,7 @@ while getopts "han:b:r:l:i:p:v:d:f:c:R:s:z:x:gkK:t:u:G:" OPTION ; do
       IMAGENAME=${IMAGENAME/.txz/}
       IMAGENAME=${IMAGENAME/.bin.bz2/}
       IMAGENAME=${IMAGENAME/.bin/}
+      IMAGENAME=${IMAGENAME/.wim/}
       if [[ "$IMAGENAME" == 'Archlinux-2017-64-minimal' ]] && ! [[ -s "$OPT_IMAGE" ]]; then
         IMAGENAME='archlinux-latest-64-minimal'
         OPT_IMAGE="$IMAGESPATH$IMAGENAME.tar.gz"
@@ -252,6 +254,11 @@ while getopts "han:b:r:l:i:p:v:d:f:c:R:s:z:x:gkK:t:u:G:" OPTION ; do
         fi
       fi
     ;;
+    W)
+      if [[ -n "$OPTARG" ]]; then
+        export OPT_WIN_PRODUCT_KEY="$OPTARG"
+      fi
+    ;;
   esac
 done
 
@@ -285,5 +292,6 @@ fi
 [ "$OPT_USE_SSHKEYS" ]  && debug "# OPT_USE_SSHKEYS:  $OPT_USE_SSHKEYS"
 [ "$OPT_SSHKEYS_URL" ]  && debug "# OPT_SSHKEYS_URL:  $OPT_SSHKEYS_URL"
 [ "$OPT_TAKE_OVER_RESCUE_SYSTEM_SSH_PUBLIC_KEYS" ] && debug "# OPT_TAKE_OVER_RESCUE_SYSTEM_SSH_PUBLIC_KEYS: $OPT_TAKE_OVER_RESCUE_SYSTEM_SSH_PUBLIC_KEYS"
+[ "$OPT_WIN_PRODUCT_KEY" ] && debug "# OPT_WIN_PRODUCT_KEY: [set]"
 
 # vim: ai:ts=2:sw=2:et

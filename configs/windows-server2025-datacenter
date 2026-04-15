@@ -1,0 +1,12 @@
+##  VDSok - vdsok-install  -  Windows Server 2025 Datacenter
+##
+
+DRIVE1 /dev/sda
+DRIVE2 /dev/sdb
+
+SWRAID 1
+SWRAIDLEVEL 1
+
+HOSTNAME win-server.example.com
+
+IMAGE /path/to/Windows-Server2025-Datacenter-amd64.wim

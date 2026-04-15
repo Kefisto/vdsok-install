@@ -1,0 +1,10 @@
+##  VDSok - vdsok-install  -  Windows 11 Pro
+##
+
+DRIVE1 /dev/sda
+
+SWRAID 0
+
+HOSTNAME win-desktop.example.com
+
+IMAGE /path/to/Windows-11-Pro-amd64.wim

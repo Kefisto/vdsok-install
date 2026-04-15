@@ -3,7 +3,7 @@
 #
 # lamp functions
 #
-# (c) 2008-2018, Hetzner Online GmbH
+# (c) 2008-2018, VDSok
 #
 
 lamp_install() { [[ "${IMAGENAME,,}" =~ lamp$|lamp-beta$ ]]; }

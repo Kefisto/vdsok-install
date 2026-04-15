@@ -3,7 +3,7 @@
 #
 # skip menu - use "autosetup" file
 #
-# (c) 2008-2022, Hetzner Online GmbH
+# (c) 2008-2022, VDSok
 #
 
 # read global variables and functions
@@ -14,7 +14,7 @@
 debug "# checking if the script is disabled"
 if [ -f "$DISABLEDFILE" ]; then
  debug "=> script is DISABLED"
- echo_red "Due to maintenance the installimage-script is temporarily unavailable.\nWe are sorry for the inconvenience."
+ echo_red "Due to maintenance the vdsok-install script is temporarily unavailable.\nWe are sorry for the inconvenience."
  exit 1
 fi
 
@@ -22,7 +22,7 @@ fi
 # display information about autosetup
 echo ""
 echo -e "\033[01;32mFound AUTOSETUP file '$AUTOSETUPCONFIG'\033[00m"
-echo -e "\033[01;33mRunning unattended installimage installation ...\033[00m"
+echo -e "\033[01;33mRunning unattended vdsok-install installation ...\033[00m"
 echo ""
 grep -v "^#" "$FOLD/install.conf" | grep -v "^$"
 echo ""

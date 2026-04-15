@@ -3,7 +3,7 @@
 #
 # blsconfig functions
 #
-# (c) 2023, Hetzner Online GmbH
+# (c) 2023, VDSok
 #
 
 blsconfig_fix_paths() {

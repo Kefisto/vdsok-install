@@ -1,0 +1,90 @@
+# VDSok post-install script for Windows
+# Executed via SetupComplete.cmd / FirstLogonCommands
+
+Write-Host "VDSok: Running post-install configuration..."
+
+# Configure NTP
+try {
+    w32tm /config /manualpeerlist:"ntp1.vdsok.com ntp2.vdsok.com ntp3.vdsok.com" /syncfromflags:manual /reliable:yes /update
+    Restart-Service w32time -ErrorAction SilentlyContinue
+    w32tm /resync
+    Write-Host "  NTP configured successfully"
+} catch {
+    Write-Host "  WARNING: Failed to configure NTP: $_"
+}
+
+# Disable Server Manager auto-start (Server editions only)
+try {
+    $task = Get-ScheduledTask -TaskName ServerManager -ErrorAction SilentlyContinue
+    if ($task) {
+        Disable-ScheduledTask -TaskName ServerManager -ErrorAction SilentlyContinue
+        Write-Host "  Server Manager auto-start disabled"
+    }
+} catch {}
+
+# Disable IE Enhanced Security Configuration (Server editions)
+$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+if (Test-Path $AdminKey) {
+    Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+    Write-Host "  IE ESC disabled for Administrators"
+}
+if (Test-Path $UserKey) {
+    Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+    Write-Host "  IE ESC disabled for Users"
+}
+
+# Set high performance power plan
+try {
+    powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+    Write-Host "  High Performance power plan activated"
+} catch {}
+
+# Disable Windows Update service
+try {
+    Stop-Service wuauserv -Force -ErrorAction SilentlyContinue
+    Set-Service wuauserv -StartupType Disabled -ErrorAction SilentlyContinue
+    Write-Host "  Windows Update service disabled"
+} catch {
+    Write-Host "  WARNING: Failed to disable Windows Update: $_"
+}
+
+# Enable Remote Desktop with Network Level Authentication
+try {
+    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+    Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name "UserAuthentication" -Value 1
+    Enable-NetFirewallRule -DisplayGroup "Remote Desktop" -ErrorAction SilentlyContinue
+    Write-Host "  RDP enabled with NLA"
+} catch {
+    Write-Host "  WARNING: Failed to configure RDP: $_"
+}
+
+# Disable auto-logon after first run
+try {
+    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon" -ErrorAction SilentlyContinue
+    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultPassword" -ErrorAction SilentlyContinue
+    Write-Host "  Auto-logon disabled"
+} catch {}
+
+# Execute disk mirror setup if present
+$mirrorScript = "$env:WINDIR\Setup\Scripts\setup-mirror.cmd"
+if (Test-Path $mirrorScript) {
+    Write-Host "  Executing disk mirror setup..."
+    Start-Process -FilePath $mirrorScript -Wait -NoNewWindow
+    Write-Host "  Disk mirror setup complete"
+}
+
+# Set timezone
+try {
+    tzutil /s "Russian Standard Time"
+    Write-Host "  Timezone set to Russian Standard Time (MSK)"
+} catch {}
+
+# Clean up: remove the firstrun script
+$selfPath = $MyInvocation.MyCommand.Path
+if ($selfPath) {
+    Remove-Item $selfPath -Force -ErrorAction SilentlyContinue
+}
+
+Write-Host "VDSok: Post-install configuration complete."
+Write-Host "VDSok: Server is ready. Connect via RDP."

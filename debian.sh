@@ -3,7 +3,7 @@
 #
 # Debian specific functions
 #
-# (c) 2008-2021, Hetzner Online GmbH
+# (c) 2008-2021, VDSok
 #
 
 
@@ -16,13 +16,13 @@ generate_config_mdadm() {
   # Enable mdadm
   #
   local mdadmdefconf="$FOLD/hdd/etc/default/mdadm"
-  sed -i "s/AUTOCHECK=false/AUTOCHECK=true # modified by installimage/" \
+  sed -i "s/AUTOCHECK=false/AUTOCHECK=true # modified by vdsok-install/" \
     "$mdadmdefconf"
-  sed -i "s/AUTOSTART=false/AUTOSTART=true # modified by installimage/" \
+  sed -i "s/AUTOSTART=false/AUTOSTART=true # modified by vdsok-install/" \
     "$mdadmdefconf"
-  sed -i "s/START_DAEMON=false/START_DAEMON=true # modified by installimage/" \
+  sed -i "s/START_DAEMON=false/START_DAEMON=true # modified by vdsok-install/" \
     "$mdadmdefconf"
-  sed -i -e "s/^INITRDSTART=.*/INITRDSTART='all' # modified by installimage/" \
+  sed -i -e "s/^INITRDSTART=.*/INITRDSTART='all' # modified by vdsok-install/" \
     "$mdadmdefconf"
 
   return "$EXITCODE"
@@ -141,8 +141,8 @@ delete_grub_device_map() {
 run_os_specific_functions() {
   randomize_mdadm_array_check_time
 
-  if hetzner_lamp_install; then
-    setup_hetzner_lamp || return 1
+  if vdsok_lamp_install; then
+    setup_vdsok_lamp || return 1
   fi
 
   [[ -e "$FOLD/hdd/var/spool/exim4/input" ]] && find "$FOLD/hdd/var/spool/exim4/input" -type f -delete

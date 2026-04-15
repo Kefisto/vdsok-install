@@ -3,7 +3,7 @@
 #
 # Ubuntu specific functions
 #
-# (c) 2007-2021, Hetzner Online GmbH
+# (c) 2007-2021, VDSok
 #
 
 # generate_config_mdadm "NIL"
@@ -15,16 +15,16 @@ generate_config_mdadm() {
   # Enable mdadm
   #
   local mdadmdefconf="$FOLD/hdd/etc/default/mdadm"
-  sed -i "s/AUTOCHECK=false/AUTOCHECK=true # modified by installimage/" \
+  sed -i "s/AUTOCHECK=false/AUTOCHECK=true # modified by vdsok-install/" \
     "$mdadmdefconf"
-  sed -i "s/AUTOSTART=false/AUTOSTART=true # modified by installimage/" \
+  sed -i "s/AUTOSTART=false/AUTOSTART=true # modified by vdsok-install/" \
     "$mdadmdefconf"
-  sed -i "s/START_DAEMON=false/START_DAEMON=true # modified by installimage/" \
+  sed -i "s/START_DAEMON=false/START_DAEMON=true # modified by vdsok-install/" \
     "$mdadmdefconf"
-  sed -i -e "s/^INITRDSTART=.*/INITRDSTART='all' # modified by installimage/" \
+  sed -i -e "s/^INITRDSTART=.*/INITRDSTART='all' # modified by vdsok-install/" \
     "$mdadmdefconf"
   if [ -f "$FOLD/hdd/etc/initramfs-tools/conf.d/mdadm" ]; then
-    sed -i "s/BOOT_DEGRADED=false/BOOT_DEGRADED=true # modified by installimage/" \
+    sed -i "s/BOOT_DEGRADED=false/BOOT_DEGRADED=true # modified by vdsok-install/" \
       "$FOLD/hdd/etc/initramfs-tools/conf.d/mdadm"
   fi
 
@@ -114,7 +114,7 @@ generate_config_grub() {
 
   if [ -d "$grubconfdir" ]; then
     # this needs to end in .cfg, otherwise grub-mkconfig will not read it"
-    grubdefconf="$grubconfdir/hetzner.cfg"
+    grubdefconf="$grubconfdir/vdsok.cfg"
     {
       echo "GRUB_HIDDEN_TIMEOUT_QUIET=false"
       echo "GRUB_CMDLINE_LINUX_DEFAULT=\"${grub_linux_default}\""
@@ -186,7 +186,7 @@ disable_ttyvtdisallocate() {
   # TTYVTDisallocate=yes may seriously mess up the login screen
   mkdir -p "$FOLD/hdd/etc/systemd/system/getty@tty1.service.d"
   {
-    echo "### $COMPANY installimage"
+    echo "### $COMPANY vdsok-install"
     echo
     echo '[Service]'
     echo 'TTYVTDisallocate=no'

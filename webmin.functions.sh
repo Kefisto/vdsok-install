@@ -3,7 +3,7 @@
 #
 # webmin functions
 #
-# (c) 2017-2018, Hetzner Online GmbH
+# (c) 2017-2018, VDSok
 #
 
 regenerate_webmin_miniserv_ssl_certificate() {

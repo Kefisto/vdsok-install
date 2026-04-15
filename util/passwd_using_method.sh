@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (c) 2023, Hetzner Online GmbH
+# (c) 2023, VDSok
 
 trap 'mv /etc/pam.d/common-passwor{d.bak,d}' exit
 

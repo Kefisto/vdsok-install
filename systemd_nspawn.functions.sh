@@ -3,7 +3,7 @@
 #
 # systemd_nspawn functions
 #
-# (c) 2015-2024, Hetzner Online GmbH
+# (c) 2015-2024, VDSok
 #
 
 # protect files from systemd
@@ -171,7 +171,7 @@ verify_machinectl_login_works() {
 
   boot_systemd_nspawn || return 1
 
-  local session="$$.tmp_installimage_test_machinectl_login"
+  local session="$$.tmp_vdsok_install_test_machinectl_login"
   screen -d -m -S "$session" machinectl login newroot
 
   until last_nonempty_line_of_screen_output_matches "$session" ' login:$'; do sleep 1; done

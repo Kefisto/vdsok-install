@@ -3,7 +3,7 @@
 #
 # archlinux functions
 #
-# (c) 2013-2021, Hetzner Online GmbH
+# (c) 2013-2021, VDSok
 #
 
 validate_image() {
@@ -26,7 +26,7 @@ extract_image() {
   debug '# empty image provided. run pacstrap install'
 
   # symlink to latest archlinux-bootstrap
-  local archlinux_mirror='https://mirror.hetzner.com/archlinux'
+  local archlinux_mirror='https://mirror.vdsok.com/archlinux'
   local archlinux_packages='base btrfs-progs cronie cryptsetup gptfdisk grub haveged linux linux-firmware lvm2 mdadm net-tools openssh python rsync vim wget xfsprogs inetutils'
 
   # dont extract archlinux-bootstrap to system memory but the target disk
@@ -49,7 +49,7 @@ extract_image() {
     "$arch_chroot_script" "$chroot_dir" pacman-key $opt |& debugoutput || return 1
   done
   local mirrorlist="$chroot_dir/etc/pacman.d/mirrorlist"
-  debug "# archlinux-bootstrap: add hetzner mirror to /etc/pacman.d/mirrorlist"
+  debug "# archlinux-bootstrap: add vdsok mirror to /etc/pacman.d/mirrorlist"
   echo "Server=$archlinux_mirror/\$repo/os/\$arch" > "$mirrorlist" || return 1
   for opt in -Syy '--noconfirm -S archlinux-keyring'; do
     debug "# archlinux-bootstrap: run $arch_chroot_script $chroot_dir pacman $opt"
@@ -117,7 +117,7 @@ extract_image() {
   [[ -e "$bash_profile_file" ]] && return 1
   debug "# create /root/.bash_profile"
   {
-    echo "### $COMPANY installimage"
+    echo "### $COMPANY vdsok-install"
     echo
     echo "alias ls='ls --color=auto'"
     echo "alias ll='ls -l'"
@@ -147,11 +147,11 @@ extract_image() {
   debug '# enable all mirrors in /etc/pacman.d/mirrorlist'
   local mirrorlist="$hdd_dir/etc/pacman.d/mirrorlist"
   sed -i s/^#Server/Server/g "$mirrorlist"
-  debug "# add hetzner mirror to /etc/pacman.d/mirrorlist"
+  debug "# add vdsok mirror to /etc/pacman.d/mirrorlist"
   local mirrorlist_bak="$mirrorlist.bak"
   cp "$mirrorlist" "$mirrorlist_bak" |& debugoutput || return 1
   {
-    echo "### $COMPANY installimage"
+    echo "### $COMPANY vdsok-install"
     echo
     echo "## $COMPANY"
     echo "Server=$archlinux_mirror/\$repo/os/\$arch"
@@ -164,7 +164,7 @@ extract_image() {
   local resolv_conf="$hdd_dir/etc/resolv.conf"
   debug "# create /etc/resolv.conf"
   {
-    echo "### $COMPANY installimage"
+    echo "### $COMPANY vdsok-install"
     echo '# nameserver config'
     while read nsaddr; do
       echo "nameserver $nsaddr"

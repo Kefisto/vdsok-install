@@ -1,5 +1,5 @@
 ## ===================================================
-##  Hetzner Online GmbH - installimage  -  Proxmox-VE
+##  VDSok - vdsok-install  -  Proxmox-VE
 ## ===================================================
 
 DRIVE1 /dev/sda

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (c) 2023, Hetzner Online GmbH
+# (c) 2023, VDSok
 
 # list network interfaces
 network_interfaces() {

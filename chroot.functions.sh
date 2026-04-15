@@ -3,7 +3,7 @@
 #
 # chroot functions
 #
-# (c) 2007-2023, Hetzner Online GmbH
+# (c) 2007-2023, VDSok
 #
 
 execute_chroot_command_wo_debug() {

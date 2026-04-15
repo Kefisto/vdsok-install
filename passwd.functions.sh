@@ -3,7 +3,7 @@
 #
 # passwd functions
 #
-# (c) 2023, Hetzner Online GmbH
+# (c) 2023, VDSok
 #
 
 installed_os_set_root_password_hash() {
@@ -16,8 +16,8 @@ rescue_root_password_hash() {
 }
 
 restore_shadow() {
-  [[ -e /etc/shadow.installimage_bak ]] || return
-  mv /etc/shado{w.installimage_bak,w}
+  [[ -e /etc/shadow.vdsok_install_bak ]] || return
+  mv /etc/shado{w.vdsok_install_bak,w}
 }
 
 rescue_password_hashing_algo() {
@@ -31,7 +31,7 @@ rescue_gen_password_hash() {
     debug 'internal error: get rescue password hashing algo failed'
     return 1
   fi
-  cp /etc/shado{w,w.installimage_bak}
+  cp /etc/shado{w,w.vdsok_install_bak}
   local passwd_cmd='passwd'
   if [[ -e /usr/bin/passwd_real ]]; then passwd_cmd='passwd_real'; fi
   PASSWD_CMD="$passwd_cmd" "$SCRIPTPATH/util/passwd$rescue_algo.sh" <<< "$password"$'\n'"$password" &> /dev/null || return 1
@@ -118,7 +118,7 @@ check_rescue_password_hashing_algo_supported_by_installed_os() {
     echo -e "\n\n\e[1;31mThe image you are trying to install does not support the"
     echo 'password hashing algorithm with which the currently set root'
     echo -e "password is hashed.\e[0m\n"
-    echo -e "You need to fix this mismatch before you can rerun installimage.\n"
+    echo -e "You need to fix this mismatch before you can rerun vdsok-install.\n"
     echo -e "\e[1;33mYou can run\e[0m $(readlink -f $SCRIPTPATH/util)/passwd$installed_os_algo.sh"
     echo -e "\e[1;33mto set a new root password using the images default algorithm.\e[0m\n"
   } >&2

@@ -3,7 +3,7 @@
 #
 # screen functions
 #
-# (c) 2023, Hetzner Online GmbH
+# (c) 2023, VDSok
 #
 
 get_screen_output() {

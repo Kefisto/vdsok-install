@@ -1,0 +1,19 @@
+##  VDSok - vdsok-install  -  Windows Server 2022 Datacenter
+##
+## Windows installations use a fixed partition layout:
+##   UEFI: EFI (100MB) + MSR (16MB) + C: (all)
+##   BIOS: System Reserved (350MB) + C: (all)
+##
+## PART/LV lines are ignored for Windows images.
+##
+
+DRIVE1 /dev/sda
+DRIVE2 /dev/sdb
+
+## Software RAID (disk mirroring via diskpart at first boot)
+SWRAID 1
+SWRAIDLEVEL 1
+
+HOSTNAME win-server.example.com
+
+IMAGE /path/to/Windows-Server2022-Datacenter-amd64.wim

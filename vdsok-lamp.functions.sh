@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 #
-# hetzner lamp functions
+# vdsok lamp functions
 #
-# (c) 2017-2018, Hetzner Online GmbH
+# (c) 2017-2018, VDSok
 #
 
-hetzner_lamp_install() { lamp_install && [[ "${IAM,,}" == 'debian' ]]; }
+vdsok_lamp_install() { lamp_install && [[ "${IAM,,}" == 'debian' ]]; }
 
-setup_hetzner_lamp() {
-  debug '# setup hetzner lamp'
+setup_vdsok_lamp() {
+  debug '# setup vdsok lamp'
   setup_lamp || return 1
   if debian_buster_image; then
     setup_adminer || return 1

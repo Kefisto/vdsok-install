@@ -3,7 +3,7 @@
 #
 # network config functions
 #
-# (c) 2017-2024, Hetzner Online GmbH
+# (c) 2017-2024, VDSok
 #
 
 # setup /etc/sysconfig/network
@@ -11,7 +11,7 @@ setup_etc_sysconfig_network() {
   debug '# setup /etc/sysconfig/network'
 
   {
-    echo "### $COMPANY installimage"
+    echo "### $COMPANY vdsok-install"
     echo
     echo "NETWORKING=yes"
   } > "$FOLD/hdd/etc/sysconfig/network"
@@ -263,7 +263,7 @@ gen_ifcfg_script_centos() {
   local predicted_network_interface_name="$(predict_network_interface_name "$network_interface")"
   local ipv4_addrs=($(network_interface_ipv4_addrs "$network_interface"))
 
-  echo "### $COMPANY installimage"
+  echo "### $COMPANY vdsok-install"
   echo
   echo "DEVICE=$predicted_network_interface_name"
   echo 'ONBOOT=yes'
@@ -349,7 +349,7 @@ gen_ifcfg_script_centos() {
 gen_route_script() {
   local gateway="$1"
 
-  echo "### $COMPANY installimage"
+  echo "### $COMPANY vdsok-install"
   echo
   echo 'ADDRESS0=0.0.0.0'
   echo 'NETMASK0=0.0.0.0'
@@ -396,7 +396,7 @@ gen_ifcfg_script_suse() {
   local ipv4_addrs=($(network_interface_ipv4_addrs "$network_interface"))
   local predicted_network_interface_name="$(predict_network_interface_name "$network_interface")"
 
-  echo "### $COMPANY installimage"
+  echo "### $COMPANY vdsok-install"
   echo
   echo 'STARTMODE="auto"'
   # dhcp
@@ -445,7 +445,7 @@ gen_ifroute_script() {
   local predicted_network_interface_name="$(predict_network_interface_name "$network_interface")"
   local gatewayv6="$(network_interface_ipv6_gateway "$network_interface")"
 
-  echo "### $COMPANY installimage"
+  echo "### $COMPANY vdsok-install"
   echo
   # static config
   local gateway="$(network_interface_ipv4_gateway "$network_interface")"
@@ -564,7 +564,7 @@ setup_etc_network_interfaces() {
   debug '# setting up /etc/network/interfaces'
 
   {
-    echo "### $COMPANY installimage"
+    echo "### $COMPANY vdsok-install"
     echo
     if [[ -e "$FOLD/hdd/etc/network/interfaces.d" ]]; then
       echo 'source /etc/network/interfaces.d/*'
@@ -606,7 +606,7 @@ gen_persistent_net_rule() {
 
 # gen persistent net rules
 gen_persistent_net_rules() {
-  echo "### $COMPANY installimage"
+  echo "### $COMPANY vdsok-install"
   echo
   while read network_interface; do
     gen_persistent_net_rule "$network_interface"
@@ -747,7 +747,7 @@ setup_etc_netplan_01_netcfg_yaml() {
   debug '# setting up /etc/netplan/01-netcfg.yaml'
   local netplan_configuration_file="$FOLD/hdd/etc/netplan/01-netcfg.yaml"
   {
-    echo "### $COMPANY installimage"
+    echo "### $COMPANY vdsok-install"
     echo 'network:'
     echo '  version: 2'
     echo '  renderer: networkd'
@@ -763,7 +763,7 @@ setup_etc_netplan_01_netcfg_yaml() {
 # $1 <network_interface>
 gen_network_file() {
   local network_interface="$1"
-  echo "### $COMPANY installimage"
+  echo "### $COMPANY vdsok-install"
   echo '[Match]'
   local predicted_network_interface_name="$(predict_network_interface_name "$network_interface")"
   echo "Name=$predicted_network_interface_name"
@@ -861,6 +861,10 @@ setup_network_config() {
     archlinux)
       setup_etc_systemd_network_files
       systemd_nspawn 'systemctl enable systemd-networkd' || return 1
+    ;;
+    windows)
+      debug '# Windows network config is handled via unattend.xml'
+      return 0
     ;;
     *) return 1;;
   esac

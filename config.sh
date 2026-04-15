@@ -3,7 +3,7 @@
 #
 # set all necessary vars and functions
 #
-# (c) 2007-2022, Hetzner Online GmbH
+# (c) 2007-2022, VDSok
 #
 
 
@@ -33,20 +33,20 @@ export COMPANY_PUBKEYS=(
   "$SCRIPTPATH/gpg/public-key-2018.asc"
   "$SCRIPTPATH/gpg/public-key-2023.asc"
 )
-export COMPANY="Hetzner Online GmbH"
-export C_SHORT="hetzner"
-export LOCKFILE='/run/lock/installimage'
+export COMPANY="VDSok"
+export C_SHORT="vdsok"
+export LOCKFILE='/run/lock/vdsok-install'
 export SYSTEMD_NSPAWN_TMP_DIR="$FOLD/systemd_nspawn"
 
 export MODULES="virtio_pci virtio_blk via82cxxx sata_via sata_sil sata_nv sd_mod ahci atiixp raid0 raid1 raid5 raid6 raid10 3w-xxxx 3w-9xxx aacraid powernow-k8"
 export STATSSERVER4="88.198.31.148"
 export STATSSERVER6="[2a01:4f8:0:a0a1::bad:1]"
-export INSTALLATION_REPORT_URL='https://dcs.hetzner.company/apis/data_center_metrics/v1/installimage_installation_reports'
+export INSTALLATION_REPORT_URL='https://api.vdsok.com/v1/vdsok_install_reports'
 export HDDMINSIZE="7000000"
 
 export DNSRESOLVER=("185.12.64.1" "185.12.64.2")
 export DNSRESOLVER_V6=("2a01:4ff:ff00::add:1" "2a01:4ff:ff00::add:2")
-export NTPSERVERS=("ntp1.hetzner.de" "ntp2.hetzner.com" "ntp3.hetzner.net")
+export NTPSERVERS=("ntp1.vdsok.com" "ntp2.vdsok.com" "ntp3.vdsok.com")
 export AUTH_DNS1="ns1.first-ns.de"
 export AUTH_DNS2="robotns2.second-ns.de"
 export AUTH_DNS3="robotns3.second-ns.com"
@@ -65,6 +65,13 @@ export DEFAULTGOVERNOR="ondemand"
 
 export UEFI="0"
 declare -x -i BTRFS=0
+
+# Windows installation settings
+export DRIVERSPATH="$SCRIPTPATH/drivers"
+export KMS_SERVER="kms.vdsok.com"
+export WINDOWS_TIMEZONE="Russian Standard Time"
+export WINDOWS_LOCALE="en-US"
+export WINDOWS_UNATTEND_TEMPLATE="$SCRIPTPATH/windows_unattend.xml.template"
 
 # dialog settings
 export DIATITLE="$COMPANY"
@@ -85,6 +92,9 @@ fi
 if (($(find "$IMAGESPATH" -type f -iname '*rocky*' -printf '.' | wc -c) > 0)); then
  export OSMENULIST+=("Rocky Linux"   "(Official)")
 fi
+if (($(find "$IMAGESPATH" -type f -iname '*windows*' -o -iname '*win-server*' -o -iname '*.wim' 2>/dev/null | wc -l) > 0)); then
+  export OSMENULIST+=("Windows" "(Server/Desktop)")
+fi
 export OSMENULIST+=(
   "Other"         "(!!NO SUPPORT!!)"
   "Old images"    "(!!NO SUPPORT!!)"
@@ -94,10 +104,10 @@ export OSMENULIST+=(
 export PROXMOX7_BASE_IMAGE="Debian-bullseye-latest-amd64-base"
 export PROXMOX8_BASE_IMAGE="Debian-bookworm-latest-amd64-base"
 
-export CPANEL_INSTALLER_SRC=http://mirror.hetzner.com/tools/cpanelinc/cpanel
+export CPANEL_INSTALLER_SRC=http://mirror.vdsok.com/tools/cpanelinc/cpanel
 
-export PLESK_INSTALLER_SRC=http://mirror.hetzner.com/tools/parallels/plesk
-export PLESK_MIRROR=http://mirror.hetzner.com/plesk
+export PLESK_INSTALLER_SRC=http://mirror.vdsok.com/tools/parallels/plesk
+export PLESK_MIRROR=http://mirror.vdsok.com/plesk
 export PLESK_STD_VERSION=PLESK_18_0_69
 export PLESK_DOWNLOAD_RETRY_COUNT=999
 export PLESK_COMPONENTS=(

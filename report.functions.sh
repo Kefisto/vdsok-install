@@ -3,7 +3,7 @@
 #
 # report functions
 #
-# (c) 2021, Hetzner Online GmbH
+# (c) 2021, VDSok
 #
 
 filter_image_option() {
@@ -18,7 +18,7 @@ filter_install_conf() {
 report_install() {
   local rescue_system_build_sha=''
 
-  if [[ -e /etc/hetzner-build ]] && [[ "\n$(< /etc/hetzner-build)" =~ $'\n'Build\ SHA1:\ ([0-9a-f-]+) ]]; then
+  if [[ -e /etc/vdsok-build ]] && [[ "\n$(< /etc/vdsok-build)" =~ $'\n'Build\ SHA1:\ ([0-9a-f-]+) ]]; then
     rescue_system_build_sha="${BASH_REMATCH[1]}"
   fi
 
@@ -71,7 +71,7 @@ report_install() {
   report="$(
     jq -n '{
       "rescue_system_build_sha": $rescue_system_build_sha,
-      "installimage_version": $installimage_version,
+      "vdsok_install_version": $vdsok_install_version,
       "bootif_ip": $bootif_ip,
       "bootif_ip6": $bootif_ip6,
       "bootif_mac": $bootif_mac,
@@ -92,12 +92,12 @@ report_install() {
         "name": $distro_id,
         "release": $distro_release
       },
-      "installimage_config": $installimage_config,
-      "installimage_return_code": $installimage_return_code,
+      "vdsok_install_config": $vdsok_install_config,
+      "vdsok_install_return_code": $vdsok_install_return_code,
       "debug_log": $debug_log
     }' \
     --arg rescue_system_build_sha "$rescue_system_build_sha" \
-    --arg installimage_version "$INSTALLIMAGE_VERSION" \
+    --arg vdsok_install_version "$INSTALLIMAGE_VERSION" \
     --arg bootif_ip "$bootif_ip" \
     --arg bootif_ip6 "$bootif_ip6" \
     --arg bootif_mac "$bootif_mac" \
@@ -112,8 +112,8 @@ report_install() {
     --arg image_flavour "${image_flavour,,}" \
     --arg distro_id "${distro_id,,}" \
     --arg distro_release "${distro_release,,}" \
-    --argjson installimage_return_code "$ERROREXIT" \
-    --arg installimage_config "$(< "$FOLD/install.conf.filtered")" \
+    --argjson vdsok_install_return_code "$ERROREXIT" \
+    --arg vdsok_install_config "$(< "$FOLD/install.conf.filtered")" \
     --arg debug_log "$(< "$FOLD/debug.txt.filtered")"
   )"
 

@@ -3,7 +3,7 @@
 #
 # kernel module config functions
 #
-# (c) 2023, Hetzner Online GmbH
+# (c) 2023, VDSok
 #
 
 unwanted_kernel_modules() {
@@ -62,7 +62,7 @@ blacklist_unwanted_and_buggy_kernel_modules() {
 
   debug '# blacklisting unwanted and buggy kernel modules'
   {
-    echo "### $COMPANY - installimage"
+    echo "### $COMPANY - vdsok-install"
     echo "### unwanted kernel modules"
     while read m; do
       echo "blacklist $m"
@@ -85,7 +85,7 @@ configure_kernel_modules() {
 
   debug '# configuring kernel modules'
   {
-    echo "### $COMPANY - installimage"
+    echo "### $COMPANY - vdsok-install"
     echo 'options drm edid_firmware=edid/1280x1024.bin'
   } > "$conf"
   diff -Naur /dev/null "$conf" | debugoutput

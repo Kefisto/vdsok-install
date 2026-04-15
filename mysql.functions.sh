@@ -3,7 +3,7 @@
 #
 # mysql functions
 #
-# (c) 2016-2021, Hetzner Online GmbH
+# (c) 2016-2021, VDSok
 #
 
 mysql_running() { execute_command_wo_debug mysqladmin ping &> /dev/null; }

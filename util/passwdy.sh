@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# (c) 2023, Hetzner Online GmbH
+# (c) 2023, VDSok
 
 "${0%/*}/passwd_using_method.sh" yescrypt "$@"
 

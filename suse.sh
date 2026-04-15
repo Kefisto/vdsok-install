@@ -3,7 +3,7 @@
 #
 # OpenSUSE specific functions
 #
-# (c) 2007-2021, Hetzner Online GmbH
+# (c) 2007-2021, VDSok
 #
 
 # generate_config_mdadm "NIL"
@@ -28,7 +28,7 @@ generate_new_ramdisk() {
   configure_kernel_modules
 
   cat << EOF > "${FOLD}/hdd/etc/dracut.conf.d/99-${C_SHORT}.conf"
-### ${COMPANY} - installimage
+### ${COMPANY} - vdsok-install
 add_dracutmodules+=" lvm mdraid "
 add_drivers+=" raid0 raid1 raid10 raid456 ext2 ext3 ext4 xfs btrfs vfat "
 hostonly="no"

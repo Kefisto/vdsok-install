@@ -3,7 +3,7 @@
 #
 # debconf functions
 #
-# (c) 2018, Hetzner Online GmbH
+# (c) 2018, VDSok
 #
 
 debconf_set() {
@@ -24,7 +24,7 @@ debconf_set_grub_install_devices() {
     echo 'KERNEL=="nvme*[0-9]n*[0-9]p*[0-9]", ENV{DEVTYPE}=="partition", ATTRS{model}=="?*", ENV{ID_MODEL}="$attr{model}"'
     echo 'KERNEL=="nvme*[0-9]n*[0-9]p*[0-9]", ENV{DEVTYPE}=="partition", ENV{ID_MODEL}=="?*", ENV{ID_SERIAL_SHORT}=="?*", \'
     echo '  ENV{ID_SERIAL}="$env{ID_MODEL}_$env{ID_SERIAL_SHORT}", SYMLINK+="disk/by-id/nvme-$env{ID_SERIAL}-part%n"'
-  } > /etc/udev/rules.d/99-installimage.rules
+  } > /etc/udev/rules.d/99-vdsok-install.rules
   udevadm control -R && udevadm trigger && udevadm settle
   local paths; paths=(); local part; local path_number
   while read drive; do

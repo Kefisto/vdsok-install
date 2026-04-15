@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+
+  <!-- windowsPE pass: disk selection, locale -->
+  <settings pass="windowsPE">
+    <component name="Microsoft-Windows-International-Core-WinPE"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <SetupUILanguage>
+        <UILanguage>@@LOCALE@@</UILanguage>
+      </SetupUILanguage>
+      <InputLocale>@@LOCALE@@</InputLocale>
+      <SystemLocale>@@LOCALE@@</SystemLocale>
+      <UILanguage>@@LOCALE@@</UILanguage>
+      <UserLocale>@@LOCALE@@</UserLocale>
+    </component>
+    <component name="Microsoft-Windows-Setup"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <UserData>
+        <ProductKey>
+          <Key>@@KMS_KEY@@</Key>
+          <WillShowUI>Never</WillShowUI>
+        </ProductKey>
+        <AcceptEula>true</AcceptEula>
+      </UserData>
+    </component>
+  </settings>
+
+  <!-- specialize pass: network, hostname, RDP, KMS, drivers -->
+  <settings pass="specialize">
+    <component name="Microsoft-Windows-Shell-Setup"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <ComputerName>@@HOSTNAME@@</ComputerName>
+      <TimeZone>@@TIMEZONE@@</TimeZone>
+    </component>
+    <component name="Microsoft-Windows-TCPIP"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <Interfaces>
+        <Interface wcm:action="add">
+          <Ipv4Settings>
+            <DhcpEnabled>false</DhcpEnabled>
+          </Ipv4Settings>
+          <Identifier>Ethernet</Identifier>
+          <UnicastIpAddresses>
+            <IpAddress wcm:action="add" wcm:keyValue="1">@@IP_ADDRESS@@/@@NETMASK_CIDR@@</IpAddress>
+          </UnicastIpAddresses>
+          <Routes>
+            <Route wcm:action="add">
+              <Identifier>1</Identifier>
+              <NextHopAddress>@@GATEWAY@@</NextHopAddress>
+              <Prefix>0.0.0.0/0</Prefix>
+              <Metric>10</Metric>
+            </Route>
+          </Routes>
+        </Interface>
+      </Interfaces>
+    </component>
+    <component name="Microsoft-Windows-DNS-Client"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <Interfaces>
+        <Interface wcm:action="add">
+          <Identifier>Ethernet</Identifier>
+          <DNSServerSearchOrder>
+            <IpAddress wcm:action="add" wcm:keyValue="1">@@DNS1@@</IpAddress>
+            <IpAddress wcm:action="add" wcm:keyValue="2">@@DNS2@@</IpAddress>
+          </DNSServerSearchOrder>
+        </Interface>
+      </Interfaces>
+    </component>
+    <component name="Microsoft-Windows-TerminalServices-LocalSessionManager"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <fDenyTSConnections>false</fDenyTSConnections>
+    </component>
+    <component name="Networking-MPSSVC-Svc"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <FirewallGroups>
+        <FirewallGroup wcm:action="add" wcm:keyValue="RemoteDesktop">
+          <Active>true</Active>
+          <Group>Remote Desktop</Group>
+          <Profile>all</Profile>
+        </FirewallGroup>
+      </FirewallGroups>
+    </component>
+    <component name="Microsoft-Windows-Security-SPP-UX"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <SkipAutoActivation>true</SkipAutoActivation>
+    </component>
+    <component name="Microsoft-Windows-PnpCustomizationsNonWinPE"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <DriverPaths>
+        <PathAndCredentials wcm:action="add" wcm:keyValue="1">
+          <Path>C:\Drivers</Path>
+        </PathAndCredentials>
+      </DriverPaths>
+    </component>
+  </settings>
+
+  <!-- oobeSystem pass: Administrator password, EULA, disable OOBE -->
+  <settings pass="oobeSystem">
+    <component name="Microsoft-Windows-Shell-Setup"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <UserAccounts>
+        <AdministratorPassword>
+          <Value>@@PASSWORD@@</Value>
+          <PlainText>true</PlainText>
+        </AdministratorPassword>
+      </UserAccounts>
+      <AutoLogon>
+        <Enabled>true</Enabled>
+        <Username>Administrator</Username>
+        <Password>
+          <Value>@@PASSWORD@@</Value>
+          <PlainText>true</PlainText>
+        </Password>
+        <LogonCount>1</LogonCount>
+      </AutoLogon>
+      <OOBE>
+        <HideEULAPage>true</HideEULAPage>
+        <HideLocalAccountScreen>true</HideLocalAccountScreen>
+        <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+        <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+        <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+        <ProtectYourPC>3</ProtectYourPC>
+        <SkipMachineOOBE>true</SkipMachineOOBE>
+        <SkipUserOOBE>true</SkipUserOOBE>
+      </OOBE>
+      <FirstLogonCommands>
+        <SynchronousCommand wcm:action="add">
+          <Order>1</Order>
+          <CommandLine>cmd /c netsh advfirewall firewall add rule name="ICMP Allow" protocol=icmpv4 dir=in action=allow</CommandLine>
+          <Description>Allow ICMP ping</Description>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <Order>2</Order>
+          <CommandLine>cmd /c netsh advfirewall firewall add rule name="RDP" protocol=tcp dir=in localport=3389 action=allow</CommandLine>
+          <Description>Allow RDP</Description>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <Order>3</Order>
+          <CommandLine>cmd /c slmgr /skms @@KMS_SERVER@@</CommandLine>
+          <Description>Set KMS server</Description>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <Order>4</Order>
+          <CommandLine>cmd /c slmgr /ato</CommandLine>
+          <Description>Activate Windows</Description>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <Order>5</Order>
+          <CommandLine>powershell.exe -ExecutionPolicy Bypass -File C:\Windows\Setup\Scripts\vdsok-firstrun.ps1</CommandLine>
+          <Description>VDSok post-install script</Description>
+        </SynchronousCommand>
+      </FirstLogonCommands>
+    </component>
+    <component name="Microsoft-Windows-International-Core"
+               processorArchitecture="amd64"
+               publicKeyToken="31bf3856ad364e35"
+               language="neutral"
+               versionScope="nonSxS"
+               xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+      <InputLocale>@@LOCALE@@</InputLocale>
+      <SystemLocale>@@LOCALE@@</SystemLocale>
+      <UILanguage>@@LOCALE@@</UILanguage>
+      <UserLocale>@@LOCALE@@</UserLocale>
+    </component>
+  </settings>
+
+</unattend>

@@ -3,7 +3,7 @@
 #
 # phpmyadmin functions
 #
-# (c) 2008-2018, Hetzner Online GmbH
+# (c) 2008-2018, VDSok
 #
 
 randomize_phpmyadmin_mysql_password() {

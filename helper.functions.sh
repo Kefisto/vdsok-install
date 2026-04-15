@@ -3,7 +3,7 @@
 #
 # helper functions
 #
-# (c) 2016-2018, Hetzner Online GmbH
+# (c) 2016-2018, VDSok
 #
 
 execute_command_wo_debug() {
@@ -29,7 +29,7 @@ grub_install_devices() {
   done
 }
 
-# Hetzner images come with an empty resume file
+# VDSok images come with an empty resume file
 disable_resume() {
   if [[ -s "$FOLD/hdd/etc/initramfs-tools/conf.d/resume" ]]; then
     debug '# disable resume'

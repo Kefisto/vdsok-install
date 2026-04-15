@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #
-# installimage main start script
+# vdsok-install main start script
 #
 # originally written by Florian Wicke and David Mayr
-# (c) 2007-2021, Hetzner Online GmbH
+# (c) 2007-2021, VDSok
 #
 
 
@@ -37,7 +37,7 @@ echo 3 >/proc/sys/vm/drop_caches
 SCRIPTPATH="$(dirname "$0")"
 REALCONFIG="$SCRIPTPATH/config.sh"
 
-FOLD="$(mktemp -d /installimage.XXXXX)"
+FOLD="$(mktemp -d /vdsok-install.XXXXX)"
 
 # copy our config file and read global variables and functions
 cp -a "$REALCONFIG" /tmp/install.vars
@@ -52,7 +52,7 @@ trap cleanup EXIT
 # get command line options
 if [ $# -lt 1 ] && [ ! -e "$AUTOSETUPCONFIG" ] ; then
   echo ""
-  echo -e "${YELLOW}run  'installimage -h'  to get help for command line arguments."
+  echo -e "${YELLOW}run  'vdsok-install -h'  to get help for command line arguments."
   echo -e "${GREEN}starting interactive mode ...${NOCOL}"
   echo ""
   # press any key or sleep 1 sec ...
@@ -69,7 +69,7 @@ fi
   mkdir -p "$FOLD/hdd"
 } >/dev/null 2>&1
 cd "$FOLD" || exit 1
-debug "# starting installimage"
+debug "# starting vdsok-install"
 
 
 # log hardware data

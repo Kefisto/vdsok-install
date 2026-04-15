@@ -3,7 +3,7 @@
 #
 # sysinfo functions
 #
-# (c) 2018, Hetzner Online GmbH
+# (c) 2018, VDSok
 #
 
 cpu_model_names() {

@@ -3,7 +3,7 @@
 #
 # randomization functions
 #
-# (c) 2016-2018, Hetzner Online GmbH
+# (c) 2016-2018, VDSok
 #
 
 regenerate_snakeoil_ssl_certificate() {
@@ -57,12 +57,12 @@ install_password_txt_hint() {
   debug '# install password.txt hint'
   {
     echo 'echo'
-    if lamp_install || hetzner_lamp_install; then
+    if lamp_install || vdsok_lamp_install; then
       echo "echo 'This server is running LAMP'"
     elif nextcloud_install; then
       echo "echo 'This server is running Nextcloud'"
     fi
-    if hetzner_lamp_install; then
+    if vdsok_lamp_install; then
       echo 'echo'
       if debian_buster_image; then
         echo "echo 'Adminer URL: https://<your-servers-ip>/adminer'"

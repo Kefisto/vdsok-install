@@ -3,7 +3,7 @@
 #
 # nextcloud functions
 #
-# (c) 2017-2021, Hetzner Online GmbH
+# (c) 2017-2021, VDSok
 #
 
 nextcloud_install() { [[ "${IMAGENAME,,}" =~ nextcloud$|nextcloud-beta$ ]]; }

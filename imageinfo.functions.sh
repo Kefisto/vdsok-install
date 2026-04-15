@@ -3,7 +3,7 @@
 #
 # imageinfo functions
 #
-# (c) 2019-2024, Hetzner Online GmbH
+# (c) 2019-2024, VDSok
 #
 
 debian_buster_image() {
@@ -132,6 +132,20 @@ image_ice_driver_version_ge() {
 
 image_ice_driver_exposes_port_name() {
   image_ice_driver_version_ge '6.8'
+}
+
+windows_image() {
+  [[ "$IAM" == 'windows' ]]
+}
+
+windows_server_image() {
+  windows_image || return 1
+  [[ "$WIN_VERSION" == '2019' ]] || [[ "$WIN_VERSION" == '2022' ]] || [[ "$WIN_VERSION" == '2025' ]]
+}
+
+windows_desktop_image() {
+  windows_image || return 1
+  [[ "$WIN_VERSION" == '10' ]] || [[ "$WIN_VERSION" == '11' ]]
 }
 
 # vim: ai:ts=2:sw=2:et

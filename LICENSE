@@ -1,9 +1,9 @@
-Copyright (c) 2007-2025, Hetzner Online GmbH
+Copyright (c) 2007-2025, VDSok
 
-The scripts were written by developers of Hetzner Online GmbH and are
+The scripts were originally written by developers of Hetzner Online GmbH, rebranded for VDSok and are
 maintained and extended by them. The scripts are written in bash and are
 available in the rescue system. They can be used and modified freely. 
-Hetzner Online GmbH assumes no liability for any damage caused by changing the
+VDSok assumes no liability for any damage caused by changing the
 scripts and excludes any support for guides that include changes to the script.
 
 Installimage was originally written by
