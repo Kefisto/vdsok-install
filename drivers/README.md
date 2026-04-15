@@ -1,38 +1,59 @@
 # VDSok Install — Windows Drivers
 
-Поместите драйверы Windows (.inf, .sys, .cat) в соответствующие подкаталоги.
-Они будут автоматически скопированы в `C:\Drivers` при установке Windows
-и подхвачены через unattend.xml (PnpCustomizationsNonWinPE).
+Драйверы Windows (.inf, .sys, .cat) автоматически копируются в `C:\Drivers`
+при установке и подхватываются через unattend.xml (PnpCustomizationsNonWinPE).
 
-## Структура
+## Быстрый старт
+
+Из rescue-среды Linux запустите автоматический загрузчик:
+
+```bash
+bash download-drivers.sh          # скачать все драйверы
+bash download-drivers.sh --network  # только сетевые
+bash download-drivers.sh --virtio   # только VirtIO (для KVM)
+```
+
+## Предустановленные драйверы
 
 ```
 drivers/
-  ├── network/     # Сетевые адаптеры (Intel I210/I350, Realtek, Broadcom)
-  ├── storage/     # Контроллеры дисков (LSI, Adaptec, Intel RST)
-  ├── display/     # Видеоадаптеры (Aspeed AST2xxx для серверных BMC/IPMI)
-  └── chipset/     # Чипсеты (Intel chipset INF)
+  └── network/
+      ├── intel/          # Intel I210/I350/X710/E810 (PRO1000–PROXGB) — v31.1
+      └── realtek/        # Realtek RTL8168/RTL8125/RTL8111
 ```
 
-## Где взять драйверы
+## Дополнительные (скачиваются через download-drivers.sh)
 
-### Серверные сетевые карты (обязательно)
-- **Intel I210/I350/X710**: https://www.intel.com/content/www/us/en/download/18293/
-- **Broadcom NetXtreme**: https://www.broadcom.com/support/download-search
-- **Realtek**: https://www.realtek.com/Download
+```
+drivers/
+  ├── network/
+  │   └── virtio/         # VirtIO NetKVM (QEMU/KVM)
+  ├── storage/
+  │   ├── broadcom/       # Broadcom/LSI MegaRAID (inbox)
+  │   └── virtio/         # VirtIO viostor/vioscsi
+  ├── display/
+  │   └── aspeed/         # ASPEED AST2400/2500/2600 BMC VGA
+  └── chipset/
+      └── intel/          # Intel Chipset INF (inbox)
+```
 
-### Серверные RAID-контроллеры
-- **LSI MegaRAID**: https://www.broadcom.com/support/download-search
-- **Adaptec**: https://www.microchip.com/design-centers/storage
+## Ручная загрузка
 
-### Серверные видеоадаптеры (BMC)
-- **Aspeed AST2400/2500/2600**: обычно входят в Windows Server inbox-драйверы
+| Категория | Драйвер | Ссылка |
+|-----------|---------|--------|
+| Сеть | Intel I210/I350/X710/E810 | https://www.intel.com/content/www/us/en/download/838943/ |
+| Сеть | Realtek RTL8168/8125 | https://www.realtek.com/Download/List?cate_id=584 |
+| Сеть | Broadcom NetXtreme | https://www.broadcom.com/support/download-search |
+| RAID | Broadcom MegaRAID | https://www.broadcom.com/support/download-search |
+| Дисплей | ASPEED AST2xxx | https://www.aspeedtech.com/support_driver/ |
+| Чипсет | Intel Chipset INF | https://www.intel.com/content/www/us/en/download/19347/ |
+| Виртуализация | VirtIO (KVM) | https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/ |
 
 ## Формат
 
-Каждый драйвер должен содержать как минимум:
+Каждый драйвер должен содержать:
 - `.inf` — файл описания
 - `.sys` — бинарный файл драйвера
-- `.cat` — каталог цифровой подписи (опционально, но рекомендуется)
+- `.cat` — каталог цифровой подписи (рекомендуется)
 
 Поддиректории внутри каталогов допускаются.

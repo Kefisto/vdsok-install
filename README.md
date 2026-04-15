@@ -202,11 +202,17 @@ IMAGE /path/to/Windows-Server2022-Datacenter-amd64.wim
 
 ### Драйверы
 
-Поместите драйверы (.inf/.sys/.cat) в каталог `drivers/`:
-- `drivers/network/` — сетевые адаптеры
-- `drivers/storage/` — контроллеры дисков
-- `drivers/display/` — видеоадаптеры
-- `drivers/chipset/` — чипсеты
+В репозиторий уже включены драйверы сетевых карт:
+- **Intel** I210/I350/X710/E810 (PRO1000–PROXGB) — v31.1
+- **Realtek** RTL8168/RTL8125/RTL8111
+
+Для скачивания дополнительных драйверов (ASPEED, VirtIO, и др.):
+
+```bash
+bash download-drivers.sh          # все драйверы
+bash download-drivers.sh --network  # только сетевые
+bash download-drivers.sh --virtio   # VirtIO для KVM
+```
 
 Драйверы автоматически копируются в `C:\Drivers` и подхватываются при первом запуске.
 
@@ -243,6 +249,7 @@ IMAGE /path/to/Windows-Server2022-Datacenter-amd64.wim
 │
 ├── windows_unattend.xml.template  # Шаблон unattend.xml для Windows
 ├── configs/                   # Готовые конфигурации (Linux + Windows)
+├── download-drivers.sh        # Загрузчик драйверов для rescue-среды
 ├── drivers/                   # Драйверы Windows (сеть, хранилище, видео)
 ├── gpg/                       # GPG-ключи для верификации образов
 ├── post-install/              # Post-install скрипты (Proxmox, Nextcloud, Windows)
