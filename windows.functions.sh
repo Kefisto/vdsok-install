@@ -296,8 +296,8 @@ win_set_admin_password() {
     return 1
   fi
 
-  echo -e "$password\n$password\ny\nq\n" | chntpw -u Administrator "$sam_file" 2>&1 | debugoutput
-  return $?
+  echo -e "$password\n$password\ny\nq\n" | chntpw -u Administrator "$sam_file" 2>&1 | debugoutput || true
+  return 0
 }
 
 win_enable_rdp_registry() {
@@ -311,14 +311,14 @@ win_enable_rdp_registry() {
     return 1
   fi
 
-  chntpw -e "$system_hive" <<'REGEOF' 2>&1 | debugoutput
+  chntpw -e "$system_hive" <<'REGEOF' 2>&1 | debugoutput || true
 cd ControlSet001\Control\Terminal Server
 ed fDenyTSConnections
 0
 q
 y
 REGEOF
-  return $?
+  return 0
 }
 
 win_disable_updates_registry() {
@@ -332,7 +332,7 @@ win_disable_updates_registry() {
     return 1
   fi
 
-  chntpw -e "$software_hive" <<'REGEOF' 2>&1 | debugoutput
+  chntpw -e "$software_hive" <<'REGEOF' 2>&1 | debugoutput || true
 cd Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update
 nv 4 AUOptions
 ed AUOptions
@@ -340,7 +340,7 @@ ed AUOptions
 q
 y
 REGEOF
-  return $?
+  return 0
 }
 
 win_inject_drivers() {
