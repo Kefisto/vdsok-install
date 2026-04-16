@@ -183,7 +183,31 @@ if [[ "$IAM" == "windows" ]]; then
   status_busy "Applying Windows image"
   wim_path="$EXTRACTFROM"
   [[ -z "$wim_path" ]] && wim_path="$IMAGESPATH/$IMAGE_FILE"
-  apply_windows_image "$wim_path" "$FOLD/hdd" 1 || status_failed
+  wim_index=1
+  wim_image_count=$(wimlib-imagex info "$wim_path" 2>/dev/null | grep "Image Count" | awk '{print $NF}')
+  if (( wim_image_count > 1 )); then
+    for ((wi=1; wi<=wim_image_count; wi++)); do
+      wim_name=$(wimlib-imagex info "$wim_path" "$wi" 2>/dev/null | grep "^Name:" | sed 's/^Name:[[:space:]]*//')
+      wim_name_upper="${wim_name^^}"
+      case "$WIN_EDITION" in
+        datacenter)
+          if [[ "$wim_name_upper" == *SERVERDATACENTER && "$wim_name_upper" != *CORE ]]; then
+            wim_index=$wi; break
+          elif [[ "$wim_name_upper" == *DATACENTER* && "$wim_name_upper" != *CORE* ]]; then
+            wim_index=$wi; break
+          fi ;;
+        standard)
+          if [[ "$wim_name_upper" == *SERVERSTANDARD && "$wim_name_upper" != *CORE ]]; then
+            wim_index=$wi; break
+          elif [[ "$wim_name_upper" == *STANDARD* && "$wim_name_upper" != *CORE* ]]; then
+            wim_index=$wi; break
+          fi ;;
+        *) if [[ "$wim_name_upper" == *"${WIN_EDITION^^}"* ]]; then wim_index=$wi; break; fi ;;
+      esac
+    done
+    debug "# Selected WIM index $wim_index for edition $WIN_EDITION"
+  fi
+  apply_windows_image "$wim_path" "$FOLD/hdd" "$wim_index" || status_failed
   status_done
 
   # Setup bootloader
