@@ -936,6 +936,7 @@ if [ -n "$1" ]; then
     *.tar.bz|*.tbz|*.tbz2|*.tar.bz2) IMAGE_FILE_TYPE="tbz" ;;
     *.tar.xz|*.txz) IMAGE_FILE_TYPE="txz" ;;
     *.tar.zst) IMAGE_FILE_TYPE="zst" ;;
+    *.wim) IMAGE_FILE_TYPE="wim" ;;
   esac
 
   BOOTLOADER="$(grep -m1 -e ^BOOTLOADER "$1" |awk '{print $2}')"

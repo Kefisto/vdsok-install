@@ -141,6 +141,7 @@ else
               dialog --backtitle "$DIATITLE" --title "Windows Images" --no-cancel --menu "Choose Windows version" 0 0 0 "${WIN_MENU[@]}" 2>"$FOLD/mainmenu.chosen"
               IMAGENAME="$(cat "$FOLD/mainmenu.chosen")"
               IMAGENAME="${IMAGENAME%.wim}"
+              whoami "$IMAGENAME"
             fi
           ;;
           *)
