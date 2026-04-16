@@ -129,9 +129,9 @@ else
             IMAGENAME="custom"
           ;;
           "Windows")
+            FINALIMAGEPATH="$IMAGESPATH"
             WIN_MENU=()
             while IFS= read -r -d '' wim_file; do
-              local wim_name
               wim_name="$(basename "$wim_file")"
               WIN_MENU+=("$wim_name" "")
             done < <(find "$IMAGESPATH" -maxdepth 1 -type f \( -iname '*windows*' -o -iname '*win-server*' -o -iname '*.wim' \) -not -name '*.sig' -print0 2>/dev/null)
