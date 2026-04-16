@@ -134,7 +134,7 @@ else
             while IFS= read -r -d '' wim_file; do
               wim_name="$(basename "$wim_file")"
               WIN_MENU+=("$wim_name" "")
-            done < <(find "$IMAGESPATH" -maxdepth 1 -type f \( -iname '*windows*' -o -iname '*win-server*' -o -iname '*.wim' \) -not -name '*.sig' -print0 2>/dev/null)
+            done < <(find "$IMAGESPATH" -maxdepth 1 \( -type f -o -type l \) \( -iname '*windows*' -o -iname '*win-server*' -o -iname '*.wim' \) -not -name '*.sig' -print0 2>/dev/null)
             if ((${#WIN_MENU[@]} == 0)); then
               dialog --backtitle "$DIATITLE" --title "Windows" --msgbox "\nNo Windows images found in $IMAGESPATH\n\nPlace WIM files like:\n  Windows-Server2022-Datacenter-amd64.wim\n" 12 60
             else

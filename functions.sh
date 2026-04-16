@@ -1804,7 +1804,7 @@ whoami() {
  IMG_ARCH="$(echo "${1%%.*}" | sed 's/.*-\(32\|64\|i386\|amd64\|arm64\).*/\1/')"
  if grep -q '-' <<< "$IMG_ARCH"; then IMG_ARCH='unknown'; fi
 
- IMG_FULLNAME="$(find "$IMAGESPATH" -maxdepth 1 -type f -name "$1*" -a -not -regex '.*\.sig$' -printf '%f\n')"
+ IMG_FULLNAME="$(find "$IMAGESPATH" -maxdepth 1 \( -type f -o -type l \) -name "$1*" -a -not -regex '.*\.sig$' -printf '%f\n')"
  IMG_EXT="${IMG_FULLNAME#*.}"
 
  export IMAGENAME

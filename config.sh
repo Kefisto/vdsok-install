@@ -95,7 +95,7 @@ fi
 if (($(find "$IMAGESPATH" -type f -iname '*rocky*' -printf '.' | wc -c) > 0)); then
  export OSMENULIST+=("Rocky Linux"   "(Official)")
 fi
-if (($(find "$IMAGESPATH" -type f -iname '*windows*' -o -iname '*win-server*' -o -iname '*.wim' 2>/dev/null | wc -l) > 0)); then
+if (($(find "$IMAGESPATH" \( -type f -o -type l \) \( -iname '*windows*' -o -iname '*win-server*' -o -iname '*.wim' \) 2>/dev/null | wc -l) > 0)); then
   export OSMENULIST+=("Windows" "(Server/Desktop)")
 fi
 export OSMENULIST+=(
