@@ -15,7 +15,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-IMAGES_DIR="${SCRIPT_DIR}/../images"
+if [[ -f "$SCRIPT_DIR/vdsok-install" ]]; then
+    IMAGES_DIR="${SCRIPT_DIR}/../images"
+elif [[ -d "/opt/vdsok-install" ]]; then
+    IMAGES_DIR="/opt/images"
+else
+    IMAGES_DIR="${SCRIPT_DIR}/../images"
+fi
 TEMP_DIR="/tmp/vdsok-images"
 
 RED='\033[0;31m'
@@ -141,21 +147,22 @@ extract_wim_from_iso() {
 name_to_filename() {
     local name="$1"
     local prefix="$2"
+    local name_upper="${name^^}"
 
-    case "$name" in
-        *"Datacenter"*"Desktop"*|*"Datacenter (Desktop Experience)"*)
+    case "$name_upper" in
+        *SERVERDATACENTERCORE*|*"DATACENTER"*"CORE"*)
+            echo "${prefix}-DatacenterCore-amd64.wim" ;;
+        *SERVERDATACENTER*|*"DATACENTER"*"DESKTOP"*|*"DATACENTER (DESKTOP"*|*"DATACENTER"*)
             echo "${prefix}-Datacenter-amd64.wim" ;;
-        *"Datacenter"*)
-            echo "${prefix}-Datacenter-core-amd64.wim" ;;
-        *"Standard"*"Desktop"*|*"Standard (Desktop Experience)"*)
+        *SERVERSTANDARDCORE*|*"STANDARD"*"CORE"*)
+            echo "${prefix}-StandardCore-amd64.wim" ;;
+        *SERVERSTANDARD*|*"STANDARD"*"DESKTOP"*|*"STANDARD (DESKTOP"*|*"STANDARD"*)
             echo "${prefix}-Standard-amd64.wim" ;;
-        *"Standard"*)
-            echo "${prefix}-Standard-core-amd64.wim" ;;
-        *"Pro"*)
+        *PRO*)
             echo "${prefix}-Pro-amd64.wim" ;;
-        *"Enterprise"*)
+        *ENTERPRISE*)
             echo "${prefix}-Enterprise-amd64.wim" ;;
-        *"Home"*)
+        *HOME*)
             echo "${prefix}-Home-amd64.wim" ;;
         *)
             local safe_name
