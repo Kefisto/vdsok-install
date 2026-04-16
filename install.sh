@@ -152,7 +152,6 @@ if [[ "$IAM" == "windows" ]]; then
   # Mount Windows partition
   inc_step
   status_busy "Mounting partitions"
-  local win_part boot_part
   win_part="$(win_get_windows_partition "$DRIVE1")"
   boot_part="$(win_get_boot_partition "$DRIVE1")"
   win_mount_ntfs "$win_part" "$FOLD/hdd" || status_failed
@@ -182,7 +181,7 @@ if [[ "$IAM" == "windows" ]]; then
   # Apply WIM image
   inc_step
   status_busy "Applying Windows image"
-  local wim_path="$EXTRACTFROM"
+  wim_path="$EXTRACTFROM"
   [[ -z "$wim_path" ]] && wim_path="$IMAGESPATH/$IMAGE_FILE"
   apply_windows_image "$wim_path" "$FOLD/hdd" 1 || status_failed
   status_done
